@@ -1,0 +1,41 @@
+software plan 
+4 and 5 are not needed for first milestone
+presentation (pdf or slides)
+word document, 3 pages
+
+document
+order -
+Scope discussion then people/role discussion and language - comes last
+sections-
+1.0._____ Scope - 1 page
+	Most important paragraph!
+	Paragraph here talk about scope (Project description)
+	talk about the product:  "this is an online system so students can share etc...." 
+	1.1___ functions - what the product does
+		from customer point of the view
+		what can the CUSTOMER do with the product
+		what does the product offer
+		examples - register, sign up, create account, find other users, share etc
+		paragraph optional
+	1.2___ performance - how well the product functions
+		pure speculation -
+		"my system can support 300 simul users with response time of 1minute"
+		paragraph optional
+	1.3__ Limitations - what it cannot do
+		ex. if its a vehical sharing system it cannot be used to buy and sale
+2.0__ tasks - developers point of view
+	what are the tasks 5 - 6 of them
+	UI, database manager, profile management etc
+3.0 Resources
+	3.1 Hardware
+		hardware needed
+	3.2 Software
+		all the software tools needed
+	3.3 People - Personnel and their roles
+		TEAM MEMBERS... FORM OF!!! MATRIX! :) manager, document specialist, gui programmer, database programmer etc multiple roles allowed
+	
+for subsections - bullets, sentences, or paragraphs ok
+
+Mockup -
+	Something to show the customer (UI), but it does not really work (pictures, example screen shots, etc) - 1 or 2 in a 7 slide slideshow
+
