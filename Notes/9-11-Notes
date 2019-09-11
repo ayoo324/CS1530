@@ -1,0 +1,74 @@
+team organization:
+using democratic approach,
+best for small teams
+min amount is two people
+
+roles:
+management, development, crossfuctional, consultant, promotor
+
+ideas for our project:
+Database programmer, network programmer, compression engineer, signal engineer
+
+Task analysis:
+	last time:
+	functions - what the customer/user would like to have
+	ex. select items, place in cart, check out, promotional deals
+	tasks - developer viewpoint
+	ex. GUI, database, etc
+create matrix:
+	functions	select items, place in cart, checkout, promotional deals etc
+tasks
+GUI
+Database
+etc
+
+Risk Management -
+	risk and cost are inversely related
+	more money -> reduce risk
+	cutting cost -> cut corners -> increase risk
+Identifying Risks
+	Technical Risk - ex. performance
+	Managerial Risk - involves people -> ex. delivery too late
+Mitigating Risks -
+	Technical mitigation strategy -> performance evaluation, improve hardware or code
+	Managerial mitigation strategy -> review progress, status report, etc
+
+Boehm's top 10 risk items -
+personnel shortfalls
+unrealistic schedules
+unrealistic budgets 
+developing wrong software functions
+developing wrong interface
+unnecessary perfectionism
+continuous requirement changes
+shortfalls in outsourced tasks or components
+realtime performance shortfalls
+straining computer science capabilities
+
+most important - the program works!
+
+for next milestone and quiz!
+Costing Techniques -
+	Estimate cost by looking at functions and tasks
+	LOC cost table
+	estimate size of programs -> how many lines of code?
+on a quiz, he'll give us a LOC cost table partially filled -> fill out the rest
+LE = (a + 4m + b)/6 
+LD = (b-a)/6
+Ld = sum(((b-a)/6)^2)^0.5
+	Labor Cost/Task Technique
+	Cost matrix derived from experience
+
+COCOMO - Constructive cost model
+good for large scale software projects
+E = (a + bS^c)m(x1, x2, xn) 
+E is effort in person-months, S is the estimated system size (LOC), a b c are constants, m is the cost multiplier, x1 2 3 are the cost attributes
+
+Cost and Risk
+lower cost, higher risk
+higher cost, lower risk
+risk can also be reduced by increasing our efforts ( costs, resources, person-months)
+cannot reduce delivery time by adding people
+
+Scheduling
+Coming up with a chart
