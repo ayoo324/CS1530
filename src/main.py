@@ -44,7 +44,7 @@ def initdb():
 #default app route
 @app.route("/")
 def default():
-    return redirect(url_for("TEMPLATE_NAME"))
+    return redirect(url_for("logger"))
 
 @app.route("/login/", methods=["GET", "POST"])
 def logger():
