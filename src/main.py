@@ -22,13 +22,10 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(30), unique=True)
     password = db.Column(db.String(30), unique=False)
-    userlevel = db.Column(db.Integer, unique=False)
-    appointment = db.relationship('Appointment', backref="user",lazy='select')
 
     def __init__(self, username, password, level):
         self.username = username
         self.password = password
-        self.userlevel = level
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -42,3 +39,32 @@ def initdb():
     db.session.add(Owner)
     db.session.commit()
     print('Initialized the database.')
+
+#------------PAGES
+#default app route
+@app.route("/")
+def default():
+    return redirect(url_for("TEMPLATE_NAME"))
+
+@app.route("/login/", methods=["GET", "POST"])
+def logger():
+    if "username" in session:
+        return redirect(url_for("profile", username=session["username"]))
+    elif request.method == "POST":
+        if request.form['submit_button'] == 'create user':
+            check = User.query.filter_by(username=request.form["user"]).first()
+            if check:
+                print("User Already Exists.")
+            else:
+                new = User(request.form["user"], request.form["pass"],2)
+                db.session.add(new)
+                db.session.commit()
+                print("User successfully created.")
+        elif request.form['submit_button'] == 'submit':
+            check = User.query.filter_by(username=request.form["user"]).first()
+            if check.password == request.form["pass"]:
+                session["username"] = request.form["user"]
+                return redirect(url_for("profile", username=session["username"]))
+            else:
+                print("Wrong password.")
+    return render_template("loginPage.html")
