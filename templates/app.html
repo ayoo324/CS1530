@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <title>Main app page</title>
+        <link rel="stylesheet" href="appcss.css">
+        <script src="../src/app.js"></script>
+	</head>
+	<body>
+		<div class="row">
+            <div class="columnbuttons">
+                <!-- This will have the furthest left most buttons -->
+                    <p><center>Test Buttons</center></p>
+                    <p>
+                        <button onclick="chatScreen('lastColumn')">Chats</button>
+                    </p>
+                    <p>
+                        <button onclick="profileScreen('lastColumn')">Chats</button>
+                    </p>
+                    <p>
+                        <button onclick="stories('lastColumn')">Chats</button>
+                    </p>
+            </div>
+            <div class="column">
+                <!-- This will have all the contacts -->
+                    <center>
+                    <p>Test2</p>
+                    <p>example name </p>
+                    <p>example name </p>
+                    <p>example name </p>
+                    <p>example name </p>
+                    <p>example name </p>
+                    <p>example name </p>
+                    <p>example name </p>
+                    <p>example name </p>
+                    <p>example name </p>
+                    <p>example name </p>
+                    <p>example name </p>
+                    <p>example name </p>
+                    <p>example name </p>
+                    <p>example name </p>
+                    <p>example name </p>
+                    <p>example name </p>
+                    <p>example name </p>
+                    <p>example name </p>
+                    <p>example name </p>
+                    <p>example name </p>
+                    </center>
+            </div>
+            <div id="lastColumn" class="column2">
+                <!-- This will have be everything else;
+                what is displayed here will depend on what button is chosen for column 1
+                It will be populated entirely with javascript & jenga
+                To populate whenever a button is pressed in columnbuttons
+                it will check to make sure it is not the button that it is already on
+                if it is - it will do nothing
+                else
+                it will remove all inner elements then repopulate
+                will need the following javascript functions:
+                removeAll
+                populate text
+                populate profile
+                populate stories
+                -->
+                <p></p>
+                    Test3
+                    <p>message y</p>
+                    <p>message y</p>
+                    <p>message y</p>
+                    <p>message y</p>
+                    <p>message y</p>
+                    <p>message y</p>
+                    <p>message y</p>
+                    <p>message y</p>
+                    <p>message y</p>
+            </div>
+	</body>
+</html>

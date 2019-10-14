@@ -1,0 +1,15 @@
+.landing {
+    float: left;
+    width: 50%;
+    position: static;
+    border: 10px solid rgb(37, 0, 245);
+    height: 800px;
+  }
+  .login{
+    float: left;
+    width: 30%;
+    position: static;
+    text-indent: 10%;
+    border: 10px solid rgb(37, 0, 245);
+    height: 800px;
+  }
