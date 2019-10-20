@@ -20,6 +20,12 @@
   border: 10px solid rgb(37, 0, 245);
   height: 800px;
 }
+.scrollable {
+  height: 84%;
+  width: 100%;
+  display: inline-block;
+  overflow-y: auto;
+}
 /* Clear floats after the columns */
 .row:after {
   content: "";
