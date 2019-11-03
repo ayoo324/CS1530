@@ -15,9 +15,24 @@ class User(db.Model):
     def login(self):
 
     def logout(self):
-# Group Model
+	
+class Group(db.model):
+    id = db.Column(db.Integer, primary_key = True, unique = True) 
+    chat_history = db.Column(db.String, nullable = True)  #stores list of string as chat history
+#add property to store in list form
+    def __init__(self, chat_history):
+        self.chat_history = chat_history
 
-# Profile Model
+
+class Profile():
+    id = db.Column(db.Integer, primary_key = True, unique = True) 
+    pic_path = db.Column(db.String, nullable = True) #need to check whether its a path or not and it can be empty
+    uID = db.Column(db.Integer, db.ForgeinKey('user.id'))
+    display_name = db.Column(db.String, unique = False)
+    def __init__(self, pic_path, uID):
+        self.pic_path = pic_path
+        self.uID = uID
+    
 
 # PROGRAMMING NOTES
 
