@@ -16,7 +16,7 @@ app.config.update(dict(
 db = SQLAlchemy(app)
 
 #-----------MODELS
-# EXAMPLE MODEL
+# User Model
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
@@ -29,7 +29,9 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.username
+# Group Model
 
+#Profile Model
 #----------CMDS
 @app.cli.command("resetdb")
 def initdb():
