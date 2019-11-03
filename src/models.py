@@ -6,7 +6,7 @@ class User(db.Model):
     username = db.Column(db.String(30), unique=True)
     password = db.Column(db.String(30), unique=False)
     email = db.Column(db.String(30), unique=True)
-
+    profile = db.relation("Profile", backref="user", lazy='select')
     def __init__(self, username, password, email):
         self.username = username
         self.password = password
@@ -17,7 +17,7 @@ class User(db.Model):
     def logout(self):
 # Group Model
 
-#Profile Model
+# Profile Model
 
 # PROGRAMMING NOTES
 
