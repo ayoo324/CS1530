@@ -1,0 +1,34 @@
+.columnbuttons {
+  float: left;
+  width: 8%;
+  position: static;
+  border: 10px solid rgb(37, 0, 245);
+  height: 800px;
+}
+.column {
+  float: left;
+  width: 10%;
+  position: static;
+  border: 10px solid rgb(37, 0, 245);
+  height: 800px;
+}
+.column2{
+  float: left;
+  width: 70%;
+  position: static;
+  text-indent: 10%;
+  border: 10px solid rgb(37, 0, 245);
+  height: 800px;
+}
+.scrollable {
+  height: 84%;
+  width: 100%;
+  display: inline-block;
+  overflow-y: auto;
+}
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}

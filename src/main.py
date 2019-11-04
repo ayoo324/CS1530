@@ -4,32 +4,60 @@ import os
 from datetime import datetime, timedelta
 import re
 from flask_socketio import SocketIO
+from models import db, User
 
 app = Flask(__name__)
 
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(
+    app.root_path, "database.db"
+)
 app.config.update(dict(
 	DEBUG=True,
 	SECRET_KEY='development key',
-	SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(app.root_path, 'database.db')
 ))
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-db = SQLAlchemy(app)
 
-#-----------MODELS
-# User Model
-class User(db.Model):
-    __tablename__ = 'user'
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(30), unique=True)
-    password = db.Column(db.String(30), unique=False)
+db.init_app(app)
 
-    def __init__(self, username, password, level):
-        self.username = username
-        self.password = password
 
-    def __repr__(self):
-        return '<User %r>' % self.username
-# Group Model
+@app.route("/createaccount/", methods=["GET", "POST"])
+def create_user():
+    if(request.method == "POST"):
+        check = User.query.filter_by(username=request.form["user"]).first()
+        if check:
+            print("User Already Exists.")
+        else:
+            new = User(username=request.form["user"], password=request.form["pass"], email=request.form["email"])
+            db.session.add(new)
+            db.session.commit()
+            print("user successfully created.")
+    return render_template("create.html")
+
+
+@app.route("/", methods=["GET", "POST"])
+def logger():
+    if "username" in session:
+        return redirect(url_for("chat_page", username=session["username"]))
+    elif request.method == "POST":
+        if request.form['submit_button'] == 'create user':
+            return redirect(url_for("create_user"))
+        elif request.form['submit_button'] == 'submit':
+            check = User.query.filter_by(username=request.form["user"]).first()
+            if check.password == request.form["pass"]:
+                session["username"] = request.form["user"]
+                return redirect(url_for("chat_page"))
+            else:
+                print("wrong username or password")
+    return render_template("loginPage.html")
+
+
+    #test to see if the user in current session
+@app.route("/main/", methods = ["POST","GET"])
+def chat_page():
+    session.clear()
+    return render_template("app.html")
+
 
 #Profile Model
 #----------CMDS
@@ -37,36 +65,10 @@ class User(db.Model):
 def initdb():
     db.drop_all()
     db.create_all()
-    Owner = User("owner", "pass", 0)
+    Owner = User("owner", "pass", "bobchen0201@gmail.com")
     db.session.add(Owner)
     db.session.commit()
-    print('Initialized the database.')
+    print("Initialized the database.")
 
-#------------PAGES
-#default app route
-@app.route("/")
-def default():
-    return redirect(url_for("logger"))
-
-@app.route("/login/", methods=["GET", "POST"])
-def logger():
-    if "username" in session:
-        return redirect(url_for("profile", username=session["username"]))
-    elif request.method == "POST":
-        if request.form['submit_button'] == 'create user':
-            check = User.query.filter_by(username=request.form["user"]).first()
-            if check:
-                print("User Already Exists.")
-            else:
-                new = User(request.form["user"], request.form["pass"],2)
-                db.session.add(new)
-                db.session.commit()
-                print("User successfully created.")
-        elif request.form['submit_button'] == 'submit':
-            check = User.query.filter_by(username=request.form["user"]).first()
-            if check.password == request.form["pass"]:
-                session["username"] = request.form["user"]
-                return redirect(url_for("profile", username=session["username"]))
-            else:
-                print("Wrong password.")
-    return render_template("loginPage.html")
+if __name__ == "__main__":
+    app.run(threaded=True)
