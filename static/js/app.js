@@ -1,3 +1,37 @@
+//Functions for XMLHttpRequest
+function makeReq(method, target, retCode, action, data) {
+    var httpRequest = new XMLHttpRequest();
+
+    if (!httpRequest) {
+        alert('Giving up :( Cannot create an XMLHTTP instance');
+        return false;
+    }
+
+    httpRequest.onreadystatechange = makeHandler(httpRequest, retCode, action);
+    httpRequest.open(method, target);
+
+    if (data) {
+        httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        httpRequest.send(data);
+    }
+    else {
+        httpRequest.send();
+    }
+}
+function makeHandler(httpRequest, retCode, action) {
+    function handler() {
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            if (httpRequest.status === retCode && action != null) {
+                action(httpRequest.responseText);
+            }
+            if (httpRequest.status !== retCode){
+                alert("There was a problem");
+            }
+        }
+    }
+    return handler;
+}
+var ContactList;
 var lastButton = null;
 var currContact = null;
 var prevContact = null;
@@ -48,18 +82,31 @@ function profileScreen(id){
     currScreen = 1;
 }
 function contacts(id){
-    var element = document.getElementById(id);
-    console.log(element.ClassList);
-    if(element.classList.contains("column")){
-        element.classList.remove("column");
+    ContactList = document.getElementById(id);
+    console.log(ContactList.ClassList);
+    console.log(document.URL);
+    if(ContactList.classList.contains("column")){
+        ContactList.classList.remove("column");
         removeAll(id);
     }else{
-        element.classList.add("column");
+        username = document.URL.split('/').pop();
+        console.log(username);
+        ContactList.classList.add("column");
         console.log("test");
-
-        //add all the contacts now
-        element.innerHTML = "<p><button onclick=\"setContact(\'contact1\')\">contact1</button></p>"
-        element.innerHTML += "<p><button onclick=\"setContact(\'contact2\')\">contact2</button></p>"
+        makeReq("GET", "/contact_list/" + username, 200, createContactList)
+        
+    }
+}
+function createContactList(responseText){
+    console.log(responseText);
+    //split the response text into usernames
+    var usernames = responseText.split(",");
+    usernames.pop();
+    console.log(usernames.length);
+    for(var i = 0; i < usernames.length; i++){
+        ContactList.innerHTML += "<p><button onclick=\"setContact(\'" + usernames[i] + "\')\">" + usernames[i] + "</button></p>";
+        console.log("hey the username is: ");
+        console.log(usernames[i]);
     }
 }
 function setContact(id){

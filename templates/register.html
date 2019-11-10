@@ -1,46 +1,45 @@
-<!DOCTYPE html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <title>Login</title>
-    <link rel="stylesheet" href="landing.css">
+    <link rel="stylesheet" href="../static/landing.css">
 </head>
 <body class="text-center">
     <form method="POST"  class="form-signin">
         <h1 class="h3 mb-3 font-weight-normal float-left">Create a New Account</h1>
         <h4 class="float-left ">It’s quick and easy.</h4>
-        <label class="float-left">Email Address</label>
-        <label for="inputEmail" class="sr-only">Email address</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+        <label class="float-left">Email</label>
+        <center>
+        <br><input type="text" name="email" placeholder="Email Address..." class="block">
+        </center>
+        <label class="float-left">Username</label>
+        <center>
+        <br><input type="text" name="username" placeholder="Username..." class="block">
+        </center>
         <label class="float-left">Password</label> 
-        <div class="form-group">
-            <input type="password" id="password" class="form-control" placeholder="Password" required>
-        </div>
+        <center>
+        <br><input type="text" name="password" placeholder="Password..." class="block">
+        
        
-        <div class="form-group">
-            <input type="password" id="confirm_password" class="form-control" placeholder="Confirm Password" required>
-        </div>
-       
-        <fieldset data-role="controlgroup">
+        <!--<fieldset data-role="controlgroup">
         <label class="float-left">Choose your gender:</label>
                   <label for="male">Male</label>
                   <input type="radio" name="gender" id="male" value="male" checked>
                   <label for="female">Female</label>
                   <input type="radio" name="gender" id="female" value="female">
-        </fieldset>
+        </fieldset> -->
         <div class="form-group m-0">
-            <button type="submit" class="btn btn-primary btn-block">
+            <button type="submit" name="submit_button" value="signup">
                     Sign up
             </button>
         </div>
+    
         <div class="mt-4 text-center">
-			Have an account? <a href="landing.html">Login in</a>
-		</div>
+            Have an account? 
+            <button type="submit" name="submit_button" value="login">
+                    Login
+            </button>
+        </div>
+        </center>
     </form>
-
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-	<script src="js/register.js"></script>
 </body>
