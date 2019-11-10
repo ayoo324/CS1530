@@ -102,11 +102,18 @@ function createContactList(responseText){
     //split the response text into usernames
     var usernames = responseText.split(",");
     usernames.pop();
-    console.log(usernames.length);
+    console.log(usernames);
     for(var i = 0; i < usernames.length; i++){
-        ContactList.innerHTML += "<p><button onclick=\"setContact(\'" + usernames[i] + "\')\">" + usernames[i] + "</button></p>";
-        console.log("hey the username is: ");
-        console.log(usernames[i]);
+        var curr = usernames[i].split(":");
+        toAdd = "";
+        toAdd += "<p><button onclick=\"setContact(\'" + curr[0] + "\')\">";
+        for(var j = 1; j < curr.length; j++){
+            toAdd += " "+ curr[j];
+        }
+        toAdd += "</button></p>";
+        ContactList.innerHTML += toAdd;
+        //console.log("hey the username is: ");
+        //console.log(usernames[i]);
     }
 }
 function setContact(id){

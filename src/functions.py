@@ -26,9 +26,11 @@ def listAllGroups(id):
     list2 = ""
     for group in list1:
         check = GroupContact.query.filter_by(group_id=group.group_id).all()
+        list2+= str(group.group_id) + ":"
         for currId in check:
             if(currId.user_id != id):
-                list2 += str(User.query.filter_by(id=currId.user_id).first_or_404().username) + " "
+                list2 += User.query.filter_by(id=currId.user_id).first_or_404().username + " "
+                print(User.query.filter_by(id=currId.user_id).first_or_404().username)
         list2+= ","
     return list2
 

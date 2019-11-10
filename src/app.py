@@ -144,7 +144,7 @@ def initdb():
     sendMessage(2, "Ter342essage")
     sendMessage(2, "Testertessage")
     
-    addToGroup(1, test10.id)
+    addToGroup(2, test10.id)
     
     
     print("Initialized the database.")
