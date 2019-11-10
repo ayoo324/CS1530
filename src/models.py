@@ -21,6 +21,8 @@ class Group(db.Model):
     #chat_history = db.Column(db.String, nullable = True)
     chat_history = db.relationship('Message', backref="group", lazy='select')
     contact = db.relationship('GroupContact', backref="group", lazy='select')
+    #check this when someone wants to make a group chat -- we can implement group chat as the wishlist feature
+    is_group_chat = db.Column(db.Boolean, unique=False, default=False)
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key = True, unique=True)
@@ -55,18 +57,6 @@ class ContactList(db.Model):
     def __init__(self, id1, id2):
         self.user_id1 = id1
         self.user_id2 = id2
-        
-def listAllContacts(id):
-    list1 = ContactList.query.filter_by(user_id1=id).all()
-    list2 = ContactList.query.filter_by(user_id2=id).all()
-    list3 = list1 + list2
-    list4 = []
-    for x in list3:
-        if(x.user_id1 != id):
-            list4.append(User.query.filter_by(id=x.user_id1).first())
-        else:
-            list4.append(User.query.filter_by(id=x.user_id2).first())
-    return list4
 
 class Request(db.Model):
     request_id = db.Column(db.Integer, primary_key=True, unique=True)
