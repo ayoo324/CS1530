@@ -28,8 +28,9 @@ class Message(db.Model):
     id = db.Column(db.Integer, primary_key = True, unique=True)
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'))
     message = db.Column(db.String, nullable = False) 
-    
-    def __init__(self, groupid, message):
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    def __init__(self, userid, groupid, message):
+        self.sender_id = userid
         self.group_id = groupid
         self.message = message
 

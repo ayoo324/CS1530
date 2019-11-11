@@ -106,17 +106,19 @@ function createContactList(responseText){
     for(var i = 0; i < usernames.length; i++){
         var curr = usernames[i].split(":");
         toAdd = "";
-        toAdd += "<p><button onclick=\"setContact(\'" + curr[0] + "\')\">";
+        //sets the group id to the button id, so when set group is called, it sets the group to the groupid
+        toAdd += "<p><button onclick=\"setGroup(\'" + curr[0] + "\')\">";
         for(var j = 1; j < curr.length; j++){
+            //adds the name of everyone in the group EXCEPT the current user
             toAdd += " "+ curr[j];
         }
+        //finishes each button
         toAdd += "</button></p>";
+        //adds the button to the html
         ContactList.innerHTML += toAdd;
-        //console.log("hey the username is: ");
-        //console.log(usernames[i]);
     }
 }
-function setContact(id){
+function setGroup(id){
     prevContact = currContact;
     currContact = id;
     if(currScreen == 0){

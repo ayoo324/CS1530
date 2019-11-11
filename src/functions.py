@@ -77,8 +77,8 @@ def addToGroup(groupID, id):
         db.session.add(groupContact)
         db.session.commit()
 
-def sendMessage(groupID, message):
-    newMessage = Message(groupID, message)
+def sendMessage(userID, groupID, message):
+    newMessage = Message(userID, groupID, message)
     db.session.add(newMessage)
     db.session.commit()
 
