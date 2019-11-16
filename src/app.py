@@ -94,11 +94,8 @@ def chat_page(username=None, groupid=None, profileid=None):
 @app.route("/group/<groupid>", methods = ["POST","GET"])
 @app.route("/group/<groupid>/<offset>", methods = ["POST","GET"])
 def get_chathistory(groupid=None, offset=None):
-    chatHistory = get_chat_history(groupid, offset)
-    for i, j in chatHistory:
-        print(i)
-        print(j)
-    return jsonify(chatHistory)
+    return jsonify(get_chat_history(groupid, offset))
+    
 @app.route("/contact_list/<username>", methods=["GET"])
 def getContactList(username=None):
     #check if user is in session

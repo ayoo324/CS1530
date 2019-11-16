@@ -133,7 +133,7 @@ def get_chat_history(id, offset):
             senders[idx] = Profile.query.filter_by(id=senders[idx]).first().display_name
             retval = zip(messages, senders)
         return list(retval)
-    return list(zip("No messages", 1))
+    return "No more messages"
 
 #def lookup_user(userid):
 
