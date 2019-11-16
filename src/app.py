@@ -58,7 +58,7 @@ def logger():
             if check:
                 if check.password == request.form["password"]:
                     session["username"] = request.form["username"]
-                    return redirect(url_for("chat_page"))
+                    return redirect(url_for("chat_page", username=session["username"]))
                 else:
                     print("Wrong username or password")
             else:
@@ -75,14 +75,17 @@ def unlogger():
 		# note, here were calling the .clear() method for the python dictionary builtin
 		session.clear()
         #send them back to the landing page
-		return render_template("landing.html")
+        #change to logout page
+		return redirect(url_for("logger"))
 	else: 
 		return redirect(url_for("logger"))
 
     #test to see if the user in current session
 @app.route("/main/")
 @app.route("/main/<username>", methods = ["POST","GET"])
-def chat_page(username=None):
+@app.route("/main/<username>/group/<groupid>", methods = ["POST","GET"])
+@app.route("/main/<username>/profile/<profileid>", methods = ["POST","GET"])
+def chat_page(username=None, groupid=None, profileid=None):
     #set the user, make sure there is a user in session
      
     #get all the groups of the user
