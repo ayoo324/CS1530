@@ -39,9 +39,10 @@ class Profile(db.Model):
     pic_path = db.Column(db.String, nullable = True) #need to check whether its a path or not and it can be empty
     uID = db.Column(db.Integer, db.ForeignKey('user.id'))
     display_name = db.Column(db.String, unique = False)
-    def __init__(self, pic_path, uID):
+    def __init__(self, pic_path, uID, display_name):
         self.pic_path = pic_path
         self.uID = uID
+        self.display_name = display_name
     
 class GroupContact(db.Model):
     id = db.Column(db.Integer, primary_key = True, unique = True) 

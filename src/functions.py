@@ -108,6 +108,9 @@ def newUser(id, pw, email):
     newUser = User(id, pw, email)
     db.session.add(newUser)
     db.session.commit()
+    newProfile = Profile(None, newUser.id, newUser.username)
+    db.session.add(newProfile)
+    db.session.commit()
     return newUser
     
 def get_chat_history(id, offset):
@@ -127,6 +130,7 @@ def get_chat_history(id, offset):
                 break
             messages[idx] = row.message
             senders[idx] = row.sender_id
+            senders[idx] = Profile.query.filter_by(id=senders[idx]).first().display_name
             retval = zip(messages, senders)
         return list(retval)
     return list(zip("No messages", 1))
