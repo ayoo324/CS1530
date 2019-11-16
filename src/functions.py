@@ -1,4 +1,7 @@
 from models import *
+from itertools import *
+from math import *
+
 def exists(id):
     check = User.query.filter_by(username=id).first()
     if not check:
@@ -106,6 +109,28 @@ def newUser(id, pw, email):
     db.session.add(newUser)
     db.session.commit()
     return newUser
+    
+def get_chat_history(id, offset):
+    if not offset or isnan(offset):
+        offset = 0
+    print("Id is : ")
+    print(id)
+    chatHistory = Message.query.filter_by(group_id=id).all()
+    if chatHistory:
+        limit = 50
+        messages = ["" for x in range(len(chatHistory))]
+        senders = [0 for x in range(len(chatHistory))]
+        for idx, row in enumerate(reversed(chatHistory), start=offset):
+            if idx >= limit:
+                break
+            if (idx + offset) >= len(chatHistory):
+                break
+            messages[idx] = row.message
+            senders[idx] = row.sender_id
+            retval = zip(messages, senders)
+        return list(retval)
+    return list(zip("No messages", 1))
+
 #def lookup_user(userid):
 
 #def delete_group(groupid):

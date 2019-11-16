@@ -1,4 +1,4 @@
-from flask import Flask, request, abort, url_for, redirect, session, render_template
+from flask import Flask, request, abort, url_for, redirect, session, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 import os
 from datetime import datetime, timedelta
@@ -91,7 +91,14 @@ def chat_page(username=None, groupid=None, profileid=None):
     #get all the groups of the user
     #groups = Group.query.filter_by(contact=currUser.id)
     return render_template("app.html")
-
+@app.route("/group/<groupid>", methods = ["POST","GET"])
+@app.route("/group/<groupid>/<offset>", methods = ["POST","GET"])
+def get_chathistory(groupid=None, offset=None):
+    chatHistory = get_chat_history(groupid, offset)
+    for i, j in chatHistory:
+        print(i)
+        print(j)
+    return jsonify(chatHistory)
 @app.route("/contact_list/<username>", methods=["GET"])
 def getContactList(username=None):
     #check if user is in session
