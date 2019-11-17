@@ -168,7 +168,6 @@ def getContactList(username=None):
     #return a list of all the contacts
     return listAllGroups(getID(username))
 
-#Profile Model
 #----------CMDS
 @app.cli.command("initdb")
 def initdb():
@@ -203,16 +202,16 @@ def initdb():
     addFriend(test11.id, test1.id)
     addFriend(test10.id, test1.id)
     #create test messages
-    sendMessage(2, 1, "Test Messageayererer111222323")
-    sendMessage(2, 1, "Test Messageayererer111222323")
-    sendMessage(3, 1, "Test Messageayererer1112224343")
-    sendMessage(3, 1, "Test Messageayererer1112224343")
-    sendMessage(1, 2, "Test Messageayerererxzc")
-    sendMessage(1, 2, "zxczsc")
-    sendMessage(1, 2, "Testasdasdssage")
-    sendMessage(3, 2, "Test Mewrweressage")
-    sendMessage(3, 2, "Ter342essage")
-    sendMessage(3, 2, "Testertessage")
+    sendMessage(test1.username, 1, "Test Messageayererer111222323")
+    sendMessage(test1.username, 1, "Test Messageayererer111222323")
+    sendMessage(test2.username, 1, "Test Messageayererer1112224343")
+    sendMessage(test2.username, 1, "Test Messageayererer1112224343")
+    sendMessage(Owner.username, 2, "Test Messageayerererxzc")
+    sendMessage(Owner.username, 2, "zxczsc")
+    sendMessage(Owner.username, 2, "Testasdasdssage")
+    sendMessage(test2.username, 2, "Test Mewrweressage")
+    sendMessage(test2.username, 2, "Ter342essage")
+    sendMessage(test2.username, 2, "Testertessage")
     
     addToGroup(2, test10.id)
     
