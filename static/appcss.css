@@ -2,7 +2,7 @@
   float: left;
   width: 8%;
   position: static;
-  border: 5px solid rgb(37, 0, 245);
+  border: 5px solid rgb(37, 0, 0);
   height: 800px;
   background-color: blueviolet;
 }
@@ -10,7 +10,7 @@
   float: left;
   width: 10%;
   position: static;
-  border: 5px solid rgb(37, 0, 245);
+  border: 5px solid rgb(37, 0, 0);
   height: 800px;
 }
 .column2{
@@ -18,7 +18,7 @@
   width: 70%;
   position: static;
   text-indent: 10%;
-  border: 5px solid rgb(37, 0, 245);
+  border: 5px solid rgb(37, 0, 0);
   height: 800px;
 }
 .scrollable {
@@ -26,6 +26,27 @@
   width: 100%;
   display: inline-block;
   overflow-y: auto;
+  bottom: 0;
+  left: 0;
+}
+.message{
+  content: "";
+  width: 100%;
+  display: table;
+  clear: both;
+}
+.sender{
+  float: left;
+  left: 5px;
+  width: 10%;
+}
+.text{
+  text-align: center;
+  width: 90%;
+}
+.timestamp{
+  float: right;
+  width: 10%;
 }
 /* Clear floats after the columns */
 .row:after {

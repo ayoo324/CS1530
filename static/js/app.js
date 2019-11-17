@@ -33,9 +33,10 @@ function makeHandler(httpRequest, retCode, action) {
 }
 var ContactList;
 var lastButton = null;
-var currContact = null;
-var prevContact = null;
+var currGroup = null;
+var prevGroup = null;
 var currScreen = null;
+var node = null;
 function removeAll(id){
     const myNode = document.getElementById(id);
     while (myNode.firstChild) {
@@ -43,23 +44,32 @@ function removeAll(id){
     }
 }
 function chatScreen(id){
-    if(currContact == null)
+    console.log(id);
+    if(currGroup == null)
         document.getElementById(id).innerHTML = "no contact selected!";
-    else if(currContact == prevContact && currScreen == 0){
+    else if(currGroup == prevGroup && currScreen == 0){
         console.log("no change");
     }
     else{
         removeAll(id);
         var element = document.getElementById(id);
-        element.innerHTML = "<p> Chat test! With contact : " + currContact + "</p>";
-        prevContact = currContact;
-        //add messages here
+        prevGroup = currGroup;  
+        //create the group info element
+        var groupInfoElement = document.createElement("groupInfo");
+        groupInfoElement.classList.add("groupinfo");
+        groupInfoElement.id = "groupElement";
+        groupInfoElement.innerHTML = "<p> Chat test! With contact : " + currGroup + "</p>";
+        element.appendChild(groupInfoElement);
+        //create the chat element
         var chatElement = document.createElement("chat");
-        chatElement.classList.add("scrollable");
-        //for testing message scrolling
-        //for(var i = 0; i < 600; i++)
-        //    chatElement.innerHTML += "<p> some random stuff yo </p>";
+        chatElement.classList.add("scrollable");  
+        chatElement.id = "chatElement";
         element.appendChild(chatElement);
+        console.log(chatElement.id);
+        //display contact info
+        makeReq("GET", "/picture/group/" + id, 200, display_pictures);
+        //display messages
+        makeReq("GET", "/group/" + id, 200, display_chat);
         //message bar
         var newElement = document.createElement("messagebar");
         newElement.innerHTML += `<p>
@@ -72,7 +82,6 @@ function chatScreen(id){
         newElement.style.verticalAlign = "bottom";
         newElement.style.position = "sticky";
         element.appendChild(newElement);
-        
     }
     currScreen = 0;
 }
@@ -119,11 +128,54 @@ function createContactList(responseText){
     }
 }
 function setGroup(id){
-    prevContact = currContact;
-    currContact = id;
+    prevGroup = currGroup;
+    currGroup = id;
     if(currScreen == 0){
         chatScreen('lastColumn');
     }else if(currScreen == 1){
         profileScreen('lastColumn');
     }
+    console.log("Set group");
+    console.log(id);
+    //display contact info
+    makeReq("GET", "/picture/group/" + id, 200, display_pictures);
+    //display messages
+    makeReq("GET", "/group/" + id, 200, display_chat);
+}
+function display_chat(responseText){
+    if(currScreen == 0){
+        var chatElement = document.getElementById("chatElement");
+        chatElement.innerHTML = "";
+        var response = JSON.parse(responseText);
+        console.log(response)
+        var node = document.createElement("emptyNode");
+        chatElement.appendChild(node);
+        //add messages here  
+        if(Array.isArray(response)){
+            username = document.URL.split('/').pop();
+            console.log(username);
+            for(var i = 0 ; i < response.length; i++){
+                var newNode = document.createElement("msgBLOCK"); 
+                newNode.classList.add("message");            
+                var sender = document.createElement("sender");
+                sender.classList.add("sender");
+                var message = document.createElement("msgtext");
+                message.classList.add("text");
+                var timestamp = document.createElement("timestamp");
+                timestamp.classList.add("timestamp")
+                sender.innerHTML = response[i][1];
+                message.innerHTML = response[i][0];
+                timestamp.innerHTML = response[i][2];
+                newNode.appendChild(sender);
+                newNode.appendChild(message);
+                newNode.appendChild(timestamp);
+                chatElement.insertBefore(newNode, node);
+                node = newNode;
+            }
+        }
+    }
+}
+function display_pictures(responseText){
+    var response = JSON.parse(responseText);
+    console.log(response);
 }
