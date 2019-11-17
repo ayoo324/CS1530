@@ -123,13 +123,15 @@ function contacts(id){
     }
 }
 function lookup(element){
+    currScreen = 2;
+    lastTimeStamp = 0;
     //our look up users page, can delete add and create groups here
     panel = document.getElementById(element);
     panel.innerHTML = "";
     buttons = document.createElement("buttons");
     buttons.classList.add("userRow");
     search = document.createElement("searchButton");
-    add = document.createElement("addButton");
+    req = document.createElement("addButton");
     remove = document.createElement("removeButton");
     textArea = document.createElement("textarea");
     textArea.placeholder = "Type username here...";
@@ -137,29 +139,39 @@ function lookup(element){
     textArea.classList.add("lookupuser");
     textArea.id = "usernameArea";
     panel.appendChild(textArea);
-    add.innerHTML = "<p><button onclick=\"addUser()\">Add</button>"
-    add.classList.add("userButtons");
+    req.innerHTML = "<p><button onclick=\"createRequest()\">Add</button>"
+    req.classList.add("userButtons");
     remove.innerHTML = "<p><button onclick=\"removeUser()\">Remove</button>"
     remove.classList.add("userButtons");
     search.innerHTML = "<p><button onclick=\"findUser()\">Search</button>"
     search.classList.add("userButtons");
-    buttons.appendChild(add);
+    buttons.appendChild(req);
     buttons.appendChild(remove);
     buttons.appendChild(search);
     panel.appendChild(buttons);
+    makeReq("GET", "/requests/" + document.URL.split('/').pop(), 200, getRequests);
 }
-function addUser(){
+function getRequests(responseText){
+    console.log("Getting requests");
+    console.log(responseText);
+}
+function createRequest(){
     username = document.getElementById("usernameArea").value;
     console.log(username);
-    console.log(document.URL.split('/').pop());
+    adder = document.URL.split('/').pop();
+    makeReq("POST", "/requests/" + document.URL.split('/').pop(), 200, null, username);
 }
 function findUser(){
     username = document.getElementById("usernameArea").value;
-    console.log(username);
+    makeReq("GET", "/users/" + username, 200, userFound);
 }
-function removeUser(){
+function userFound(responseText){
+
+}
+function leave_group(){
     username = document.getElementById("usernameArea").value;
     console.log(username);
+    makeReq("POST", "/leave_group/" + document.URL.split('/').pop(), 200, removegroup, username)
 }
 function createContactList(responseText){
     console.log(responseText);

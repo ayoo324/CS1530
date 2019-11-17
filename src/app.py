@@ -128,6 +128,23 @@ def get_pictures_by_group(groupid=None):
 def get_picture(id):
     return jsonify(get_profile_picture(id))
 
+@app.route("/requests/<username>", methods = ["POST","GET"])
+def createRequest(username=None):
+    if not session["username"]:
+        print("session error?")
+        return redirect(url_for("logger"))
+    if username != str(session["username"]):
+        print("username error?")
+        return redirect(url_for("chat_page", username=session["username"]))
+    if request.method == "POST":
+        #create_request(username)
+        print("creating request with")
+        print(request.get_data(True, True, False))
+        create_request(username, request.get_data(True, True, False))
+        return "Created request"
+    elif request.method == "GET":
+        return jsonify(get_requests(username))
+    return "Error"
 
 @app.route("/contact_list/<username>", methods=["GET"])
 def getContactList(username=None):

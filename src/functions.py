@@ -145,6 +145,26 @@ def get_profile_picture(id):
 def get_all_users_in_group(groupid):
     users = GroupContact.query.filter_by(group_id=groupid).all()
     return users
+def create_request(requestee, requestor):
+    #first check if they are already friends
+    if ContactList.query.filter_by(user_id1=getID(requestee), user_id2=getID(requestor)).first() or ContactList.query.filter_by(user_id1=getID(requestor), user_id2=getID(requestee)).first():
+        print("Already friends")
+        return "Already Friends" 
+    if not User.query.filter_by(username=requestor).first():
+        print("User does not exist")
+        return "User does not exist"
+    if Request.query.filter_by(requestee=getID(requestee), requestor=getID(requestor)).first() or Request.query.filter_by(requestor=getID(requestee), requestee=getID(requestor)).first():
+        print("Request already exists")
+        return "Request already exists"
+    print("making request")
+    print(requestor)
+    newreq = Request(getID(requestee), getID(str(requestor)))
+    db.session.add(newreq)
+    db.session.commit()
+    return "Successfully made request"
+
+def get_requests(username):
+    return Request.query.filter_by(requestor=username).all()
 #def lookup_user(userid):
 
 #def delete_group(groupid):

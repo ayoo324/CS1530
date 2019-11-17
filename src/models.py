@@ -70,7 +70,7 @@ class Request(db.Model):
     requestor = db.Column(db.Integer, db.ForeignKey('user.id'))
     def __init__(self, requesteeid, requestorid):
         self.requestee = requesteeid
-        self.requstore = requestorid
+        self.requestor = requestorid
 # PROGRAMMING NOTES
 
 #There will be a separate  table that has all group ids listed with each user id
