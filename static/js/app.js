@@ -151,6 +151,20 @@ function lookup(element){
     panel.appendChild(buttons);
     makeReq("GET", "/requests/" + document.URL.split('/').pop(), 200, getRequests);
 }
+function removeUser(){
+    username = document.getElementById("usernameArea").value;
+    console.log(username);
+    element = document.getElementById("response_area");
+    currUser = document.URL.split('/').pop();
+    if(username != currUser)
+        makeReq("POST", "/remove/" + document.URL.split('/').pop(), 200, removeContact, username);
+    else
+        element.innerHTML = "You cannot delete yourself. That's illegal, I'm calling the police";
+}
+function removeContact(responseText){
+    console.log("remove response:")
+    console.log(responseText);
+}
 function getRequests(responseText){
     console.log("Getting requests");
     requests = JSON.parse(responseText);
@@ -161,6 +175,7 @@ function getRequests(responseText){
     responseDiv.classList.add("responseFromServer");
     element.appendChild(responseDiv);
     var newElement = document.createElement("requestDiv");
+    newElement.classList.add("scrollable");
     for(var i = 0; i < requests.length; i++){
         var currElement = document.createElement("requestor");
         currElement.id = "request_" + i;
@@ -171,9 +186,9 @@ function getRequests(responseText){
         deny.innerHTML = "<p><button id=\"deny_" + requests[i] + "\" onclick=\"respondRequest(this.id," + currElement.id + ")\">Deny</button>"; 
         currElement.appendChild(accept);
         currElement.appendChild(deny);
-        newElement.appendChild(currElement);
-        element.appendChild(newElement);
+        newElement.appendChild(currElement);   
     }
+    element.appendChild(newElement);
 }
 function respondRequest(username, element){
     console.log(username);

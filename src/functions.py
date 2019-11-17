@@ -175,6 +175,33 @@ def deny_request(requestee, requestor):
     Request.query.filter_by(requestee=getID(requestee), requestor=getID(requestor)).delete()
     db.session.commit()
 
+def remove_friend(username1, username2):
+    #remove from contact list
+    toRemove = ContactList.query.filter_by(user_id1=getID(username1), user_id2=getID(username2))
+    if not toRemove:
+        toRemove = ContactList.query.filter_by(user_id2=getID(username1), user_id1=getID(username2))
+    print(toRemove)
+    toRemove.delete()
+    #remove from groupcontact and grab group id for the two
+    groupsC1 = GroupContact.query.filter_by(user_id=getID(username1)).all()
+    groupsC2 = GroupContact.query.filter_by(user_id=getID(username2)).all()
+    for group in groupsC1:
+        for group2 in groupsC2:
+            if group.group_id == group2.group_id:
+                print("Match found, group is: ")
+                print(group.group_id)
+                #check if group is groupchat
+                if Group.query.filter_by(id=group.group_id).first().is_group_chat == 0:
+                    #we found our group boys!
+                    print(group.group_id)
+                    #remove group and groupContact
+                    GroupContact.query.filter_by(user_id=getID(username2), group_id=group.group_id).delete()
+                    GroupContact.query.filter_by(user_id=getID(username1), group_id=group.group_id).delete()
+                    Group.query.filter_by(id=group.group_id).delete()
+                    db.session.commit()
+                    return "Removed contact successfully"
+    return "No match found"
+
 #def lookup_user(userid):
 
 #def delete_group(groupid):

@@ -176,6 +176,18 @@ def lookupUser(username=None):
     if user:
         return jsonify(user.username)
     return "-2"
+
+@app.route("/users/", methods=["GET"])
+@app.route("/remove/<username>", methods=["POST"])
+def removeFriend(username=None):
+    print(request.get_data(True, True, False))
+    print(username)
+    if not username:
+        return "-1"
+    user = exists(username)
+    if user:
+        return remove_friend(username, request.get_data(True, True, False))
+    return "-2"
 #----------CMDS
 @app.cli.command("initdb")
 def initdb():
@@ -221,6 +233,18 @@ def initdb():
     sendMessage(test2.username, 2, "Ter342essage")
     sendMessage(test2.username, 2, "Testertessage")
     
+    create_request(test1.username, test12.username)
+    create_request(test2.username, test12.username)
+    create_request(test3.username, test12.username)
+    create_request(test4.username, test12.username)
+    create_request(test5.username, test12.username)
+    create_request(test6.username, test12.username)
+    create_request(test7.username, test12.username)
+    create_request(test8.username, test12.username)
+    create_request(test9.username, test12.username)
+    create_request(test10.username, test12.username)
+    create_request(test11.username, test12.username)
+    create_request(Owner.username, test12.username)
     addToGroup(2, test10.id)
     
     
