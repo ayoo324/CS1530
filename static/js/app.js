@@ -125,7 +125,7 @@ function contacts(id){
 function lookup(element){
     currScreen = 2;
     lastTimeStamp = 0;
-    //our look up users page, can delete add and create groups here
+    //our look up users page, can delete add and look up users here
     panel = document.getElementById(element);
     panel.innerHTML = "";
     buttons = document.createElement("buttons");
@@ -156,6 +156,10 @@ function getRequests(responseText){
     requests = JSON.parse(responseText);
     console.log(requests);
     var element = document.getElementById("lastColumn");
+    var responseDiv = document.createElement("ResponseArea");
+    responseDiv.id = "response_area";
+    responseDiv.classList.add("responseFromServer");
+    element.appendChild(responseDiv);
     var newElement = document.createElement("requestDiv");
     for(var i = 0; i < requests.length; i++){
         var currElement = document.createElement("requestor");
@@ -183,15 +187,27 @@ function respondRequest(username, element){
 function createRequest(){
     username = document.getElementById("usernameArea").value;
     console.log(username);
+    element = document.getElementById("response_area");
     adder = document.URL.split('/').pop();
-    makeReq("POST", "/requests/" + document.URL.split('/').pop(), 200, null, username);
+    if(username != adder)
+        makeReq("POST", "/requests/" + document.URL.split('/').pop(), 200, null, username);
+    else
+        element.innerHTML = "You cannot add yourself. That's illegal";
 }
 function findUser(){
     username = document.getElementById("usernameArea").value;
     makeReq("GET", "/users/" + username, 200, userFound);
 }
 function userFound(responseText){
-
+    console.log(responseText);
+    element = document.getElementById("response_area");
+    console.log(parseInt(responseText));
+    if(responseText == "-1")   
+        element.innerHTML = "No username entered";
+    else if(responseText == "-2")
+        element.innerHTML = "Username does not exist.";
+    else
+        element.innerHTML = JSON.parse(responseText) + " exists.";
 }
 function leave_group(){
     username = document.getElementById("usernameArea").value;

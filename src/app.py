@@ -167,7 +167,15 @@ def getContactList(username=None):
         return render_template("landing.html")
     #return a list of all the contacts
     return listAllGroups(getID(username))
-
+@app.route("/users/", methods=["GET"])
+@app.route("/users/<username>", methods=["GET"])
+def lookupUser(username=None):
+    if not username:
+        return "-1"
+    user = exists(username)
+    if user:
+        return jsonify(user.username)
+    return "-2"
 #----------CMDS
 @app.cli.command("initdb")
 def initdb():

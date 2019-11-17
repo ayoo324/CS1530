@@ -72,6 +72,11 @@
   height: 99%;
   width: 100%;
 }
+.responseFromServer{
+  height: 10%;
+  font-size: 16px;
+  width: 100%;
+}
 .textBarWrapper{
   border: 5px hidden;
   bottom: 0px;

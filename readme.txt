@@ -4,7 +4,7 @@ set FLASK_APP=main.app
 for mac: export FLASK_APP=main.app
 then,  flask run
 and if you want to initialize the database, you need to do 
-flask restdb 
+flask initdb
 
 and if you want to see whats in the database, i recommand you to use vs code,
 and do shift+ctrl+p, then search for SQLite:search for database, select the .db
