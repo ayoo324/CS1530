@@ -143,8 +143,21 @@ def createRequest(username=None):
         create_request(username, request.get_data(True, True, False))
         return "Created request"
     elif request.method == "GET":
-        return jsonify(get_requests(username))
+        retVal = []
+        for req in get_requests(username):
+            retVal.append(getUsername(req.requestee))
+        return jsonify(retVal)
     return "Error"
+
+@app.route("/request/<username>", methods = ["POST","GET"])
+def respondRequest(username=None):
+    data = request.get_data(True, True, False).split('_')
+    print(data)
+    if data[0] == 'accept':
+        accept_request(data[1], username)
+    elif data[0] == 'deny':
+        deny_request(data[1], username)
+    return "Received request"
 
 @app.route("/contact_list/<username>", methods=["GET"])
 def getContactList(username=None):

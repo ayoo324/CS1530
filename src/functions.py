@@ -164,7 +164,17 @@ def create_request(requestee, requestor):
     return "Successfully made request"
 
 def get_requests(username):
-    return Request.query.filter_by(requestor=username).all()
+    return Request.query.filter_by(requestor=getID(username)).all()
+
+def accept_request(requestee, requestor):
+    addFriend(getID(requestee), getID(requestor))
+    Request.query.filter_by(requestee=getID(requestee), requestor=getID(requestor)).delete()
+    db.session.commit()
+
+def deny_request(requestee, requestor):
+    Request.query.filter_by(requestee=getID(requestee), requestor=getID(requestor)).delete()
+    db.session.commit()
+
 #def lookup_user(userid):
 
 #def delete_group(groupid):

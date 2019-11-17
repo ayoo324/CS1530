@@ -153,7 +153,32 @@ function lookup(element){
 }
 function getRequests(responseText){
     console.log("Getting requests");
-    console.log(responseText);
+    requests = JSON.parse(responseText);
+    console.log(requests);
+    var element = document.getElementById("lastColumn");
+    var newElement = document.createElement("requestDiv");
+    for(var i = 0; i < requests.length; i++){
+        var currElement = document.createElement("requestor");
+        currElement.id = "request_" + i;
+        var accept = document.createElement("acceptButton");
+        var deny = document.createElement("denyButton");
+        currElement.innerHTML = requests[i];
+        accept.innerHTML = "<p><button id=\"accept_" + requests[i] + "\"onclick=\"respondRequest(this.id," + currElement.id + ")\" >Accept</button>";
+        deny.innerHTML = "<p><button id=\"deny_" + requests[i] + "\" onclick=\"respondRequest(this.id," + currElement.id + ")\">Deny</button>"; 
+        currElement.appendChild(accept);
+        currElement.appendChild(deny);
+        newElement.appendChild(currElement);
+        element.appendChild(newElement);
+    }
+}
+function respondRequest(username, element){
+    console.log(username);
+    console.log(element);
+    var arr = username.split("_");
+    console.log(arr[0]);
+    console.log(arr[1]);
+    makeReq("POST", "/request/" + document.URL.split('/').pop(), 200, null, username);
+    removeAll(element.id);
 }
 function createRequest(){
     username = document.getElementById("usernameArea").value;
@@ -208,8 +233,7 @@ function setGroup(id){
         profileScreen('lastColumn');
     }
     
-}
-function display_chat(responseText){
+}function display_chat(responseText){
     var response = JSON.parse(responseText);
     if(currScreen == 0){
         if(Array.isArray(response)){
