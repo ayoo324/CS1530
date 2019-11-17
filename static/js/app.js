@@ -72,18 +72,28 @@ function chatScreen(id){
         makeReq("GET", "/group/" + id, 200, display_chat);
         //message bar
         var newElement = document.createElement("messagebar");
-        newElement.innerHTML += `<p>
-        <label for=\"msg\"><b>Message</b></label>
-        <textarea placeholder=\"Type message...\" name=\"msg\" required>
-        </textarea><button type=\"submit\" class=\"btn\">Send</button>
-        </p>
-        `;
-        newElement.style.display = "block";
-        newElement.style.verticalAlign = "bottom";
-        newElement.style.position = "sticky";
+        newElement.classList.add("textBarWrapper");
+        var textArea = document.createElement("textarea");
+        textArea.placeholder = "Press enter to submit...";
+        textArea.name = "msg";
+        textArea.classList.add("textToSend");
+        textArea.id = "textArea";
+        textArea.addEventListener("keypress", submitOnEnter);
+        newElement.appendChild(textArea);
         element.appendChild(newElement);
     }
     currScreen = 0;
+}
+function eraseChatBar(){
+    var element = document.getElementById("textArea");
+    element.value = "";
+}
+function submitOnEnter(event){
+    if(event.which === 13){
+        sendMessage();
+        event.preventDefault(); // Prevents the addition of a new line in the text field (not needed in a lot of cases)
+        eraseChatBar();
+    }
 }
 function profileScreen(id){
     removeAll(id);
@@ -194,4 +204,8 @@ function display_pictures(responseText){
         header.appendChild(picture);
         header.appendChild(name);
     }
+}
+function sendMessage(){
+    var textToSend = document.getElementById("textArea").value;
+    console.log(textToSend);
 }
