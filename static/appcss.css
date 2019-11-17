@@ -22,7 +22,7 @@
   height: 800px;
 }
 .scrollable {
-  height: 84%;
+  height: 80%;
   width: 100%;
   display: inline-block;
   overflow-y: auto;
@@ -35,8 +35,9 @@
   display: table;
   clear: both;
 }
-.group{
+.groupinfo{
   content: "";
+  height: 10%;
   width: 100%;
   display: table;
   clear: both;
@@ -52,14 +53,22 @@
 }
 .textToSend{
   float: left;
-  width: 80%;
+  font-size: 16px;
+  border: 5px inset rgb(37, 0, 245);
+  background-color: azure;
+  position: sticky;
+  bottom: 0px;
+  height: 99%;
+  width: 100%;
 }
 .textBarWrapper{
+  border: 5px hidden;
+  bottom: 0px;
+  height: 8%;
   display: block;
   position: sticky;
-  display:table;
   clear: both;
-  width: 100%;
+  width: 99%;
   content: "";
 }
 .sender{
@@ -87,13 +96,4 @@
 
 .columnbuttons div button{
   background-color: blueviolet;
-}
-
-#textArea{
-  outline: none;
-  width: 100%;
-  margin: auto;
-  border: none;
-  background:gray;
-  resize: none;
 }
