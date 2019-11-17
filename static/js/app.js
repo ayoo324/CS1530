@@ -87,8 +87,9 @@ function chatScreen(id){
 }
 function profileScreen(id){
     removeAll(id);
-    document.getElementById(id).innerHTML = "Profile test! " + currContact;
+    document.getElementById(id).innerHTML = "Profile test! " + currGroup;
     currScreen = 1;
+    console.log(currScreen);
 }
 function contacts(id){
     ContactList = document.getElementById(id);
@@ -130,17 +131,19 @@ function createContactList(responseText){
 function setGroup(id){
     prevGroup = currGroup;
     currGroup = id;
+    console.log(currScreen);
     if(currScreen == 0){
         chatScreen('lastColumn');
+        console.log("Set group");
+        console.log(id);
+        //display contact info
+        makeReq("GET", "/picture/group/" + id, 200, display_pictures);
+        //display messages
+        makeReq("GET", "/group/" + id, 200, display_chat);
     }else if(currScreen == 1){
         profileScreen('lastColumn');
     }
-    console.log("Set group");
-    console.log(id);
-    //display contact info
-    makeReq("GET", "/picture/group/" + id, 200, display_pictures);
-    //display messages
-    makeReq("GET", "/group/" + id, 200, display_chat);
+    
 }
 function display_chat(responseText){
     if(currScreen == 0){
@@ -178,4 +181,17 @@ function display_chat(responseText){
 function display_pictures(responseText){
     var response = JSON.parse(responseText);
     console.log(response);
+    var header = document.getElementById("groupElement");
+    header.classList.add("group");
+    header.innerHTML = "";
+    for(var i = 0; i < response.length; i++){
+        var picture = document.createElement("img");
+        picture.src = "../static/images/" + response[i][1] + ".png";
+        picture.classList.add("picture");
+        var name = document.createElement("name");
+        name.classList.add("displayName");
+        name.innerHTML = response[i][0] + " ";
+        header.appendChild(picture);
+        header.appendChild(name);
+    }
 }
