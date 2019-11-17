@@ -21,6 +21,17 @@
   border: 5px solid rgb(37, 0, 245);
   height: 800px;
 }
+.lookupuser{
+  float: left;
+  display: block;
+  font-size: 16px;
+  border: 5px inset rgb(37, 0, 245);
+  background-color: azure;
+  position: sticky;
+  bottom: 0px;
+  height: 10%;
+  width: 99%;
+}
 .scrollable {
   height: 80%;
   width: 100%;
@@ -71,6 +82,11 @@
   width: 99%;
   content: "";
 }
+.userButtons{
+  width: 30%;
+  float: left;
+  position: static;
+}
 .sender{
   float: left;
   left: 5px;
@@ -89,7 +105,12 @@
   display: table;
   clear: both;
 }
-
+.userRow{
+  width: 100%;
+  content: "";
+  display: table;
+  clear: both;
+}
 .columnbuttons div{
   text-align:center;
 }

@@ -122,6 +122,45 @@ function contacts(id){
         
     }
 }
+function lookup(element){
+    //our look up users page, can delete add and create groups here
+    panel = document.getElementById(element);
+    panel.innerHTML = "";
+    buttons = document.createElement("buttons");
+    buttons.classList.add("userRow");
+    search = document.createElement("searchButton");
+    add = document.createElement("addButton");
+    remove = document.createElement("removeButton");
+    textArea = document.createElement("textarea");
+    textArea.placeholder = "Type username here...";
+    textArea.name = "msg";
+    textArea.classList.add("lookupuser");
+    textArea.id = "usernameArea";
+    panel.appendChild(textArea);
+    add.innerHTML = "<p><button onclick=\"addUser()\">Add</button>"
+    add.classList.add("userButtons");
+    remove.innerHTML = "<p><button onclick=\"removeUser()\">Remove</button>"
+    remove.classList.add("userButtons");
+    search.innerHTML = "<p><button onclick=\"findUser()\">Search</button>"
+    search.classList.add("userButtons");
+    buttons.appendChild(add);
+    buttons.appendChild(remove);
+    buttons.appendChild(search);
+    panel.appendChild(buttons);
+}
+function addUser(){
+    username = document.getElementById("usernameArea").value;
+    console.log(username);
+    console.log(document.URL.split('/').pop());
+}
+function findUser(){
+    username = document.getElementById("usernameArea").value;
+    console.log(username);
+}
+function removeUser(){
+    username = document.getElementById("usernameArea").value;
+    console.log(username);
+}
 function createContactList(responseText){
     console.log(responseText);
     //split the response text into usernames

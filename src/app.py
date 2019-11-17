@@ -87,7 +87,14 @@ def unlogger():
 @app.route("/main/<username>/profile/<profileid>", methods = ["POST","GET"])
 def chat_page(username=None, groupid=None, profileid=None):
     #set the user, make sure there is a user in session
-     
+    print("session username:")
+    print(session["username"])
+    if not session["username"]:
+        print("session error?")
+        return redirect(url_for("logger"))
+    if username != str(session["username"]):
+        print("username error?")
+        return redirect(url_for("chat_page", username=session["username"]))
     #get all the groups of the user
     #groups = Group.query.filter_by(contact=currUser.id)
     return render_template("app.html")

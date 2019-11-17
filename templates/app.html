@@ -8,7 +8,6 @@
 	<body>
 		<div class="row">
             <div class="columnbuttons">
-                <!-- This will have the furthest left most buttons -->
                     <p class="center">Test Buttons</p>
                     <div>
                         <button id="chatButton" onclick="chatScreen('lastColumn')"><img src="../static/images/chat.png" width="20" height="20"></a></button>
@@ -20,38 +19,17 @@
                         <button onclick="contacts('contactColumn')"><img src="../static/images/contacts.png" width="20" height="20"></button>
                     </div>
                     <div>
-                    <a href="{{ url_for("unlogger") }}">click here to logout</a>
+                        <button onclick="lookup('lastColumn')"><img src="../static/images/contacts.png" width="20" height="20"></button>
+                    </div>
+                    <div>
+                        <a href="{{ url_for("unlogger") }}">click here to logout</a>
                     </div>
             </div>
             <div id="contactColumn">
 
             </div>
             <div id="lastColumn" class="column2">
-                <!-- This will have be everything else;
-                what is displayed here will depend on what button is chosen for column 1
-                It will be populated entirely with javascript & jenga
-                To populate whenever a button is pressed in columnbuttons
-                it will check to make sure it is not the button that it is already on
-                if it is - it will do nothing
-                else
-                it will remove all inner elements then repopulate
-                will need the following javascript functions:
-                removeAll
-                populate text
-                populate profile
-                populate stories
-                -->
-                <p></p>
-                    Test3
-                    <p>message y</p>
-                    <p>message y</p>
-                    <p>message y</p>
-                    <p>message y</p>
-                    <p>message y</p>
-                    <p>message y</p>
-                    <p>message y</p>
-                    <p>message y</p>
-                    <p>message y</p>
+                
             </div>
     </body>
 </html>
