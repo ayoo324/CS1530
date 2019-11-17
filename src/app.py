@@ -82,7 +82,7 @@ def unlogger():
 
     #test to see if the user in current session
 @app.route("/main/")
-@app.route("/main/<username>", methods = ["POST","GET"])
+@app.route("/main/<username>", methods = ["GET"])
 @app.route("/main/<username>/group/<groupid>", methods = ["POST","GET"])
 @app.route("/main/<username>/profile/<profileid>", methods = ["POST","GET"])
 def chat_page(username=None, groupid=None, profileid=None):
@@ -91,6 +91,14 @@ def chat_page(username=None, groupid=None, profileid=None):
     #get all the groups of the user
     #groups = Group.query.filter_by(contact=currUser.id)
     return render_template("app.html")
+@app.route("/send/<username>/<groupid>/<message>", methods = ["POST"])
+def send(message=None, groupid=None, username=None):
+    if request.method == 'POST':
+        sendMessage(username, groupid, message)
+        return "Commited to db"
+    return "Something failed"
+    
+
 @app.route("/group/<groupid>", methods = ["POST","GET"])
 @app.route("/group/<groupid>/<offset>", methods = ["POST","GET"])
 def get_chathistory(groupid=None, offset=None):

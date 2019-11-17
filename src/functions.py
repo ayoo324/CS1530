@@ -25,6 +25,7 @@ def listAllContacts(id):
     return retVal
 def getUsername(id):
     return User.query.filter_by(id=id).first_or_404().username
+
 def listAllGroups(id):
     list1 = GroupContact.query.filter_by(user_id=id).all()
     list2 = ""
@@ -81,8 +82,8 @@ def addToGroup(groupID, id):
         db.session.add(groupContact)
         db.session.commit()
 
-def sendMessage(userID, groupID, message):
-    newMessage = Message(userID, groupID, message)
+def sendMessage(username, groupID, message):
+    newMessage = Message(getID(username), groupID, message)
     db.session.add(newMessage)
     db.session.commit()
 

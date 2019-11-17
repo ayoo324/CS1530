@@ -1,3 +1,5 @@
+var timeout = 750;
+var lastTimeStamp = 0;
 //Functions for XMLHttpRequest
 function makeReq(method, target, retCode, action, data) {
     var httpRequest = new XMLHttpRequest();
@@ -36,6 +38,7 @@ var lastButton = null;
 var currGroup = null;
 var prevGroup = null;
 var currScreen = null;
+var prevScreen = null;
 var node = null;
 function removeAll(id){
     const myNode = document.getElementById(id);
@@ -45,6 +48,7 @@ function removeAll(id){
 }
 function chatScreen(id){
     console.log(id);
+    console.log("Chat screen");
     if(currGroup == null)
         document.getElementById(id).innerHTML = "no contact selected!";
     else if(currGroup == prevGroup && currScreen == 0){
@@ -53,7 +57,6 @@ function chatScreen(id){
     else{
         removeAll(id);
         var element = document.getElementById(id);
-        prevGroup = currGroup;  
         //create the group info element
         var groupInfoElement = document.createElement("groupInfo");
         groupInfoElement.classList.add("groupinfo");
@@ -67,9 +70,9 @@ function chatScreen(id){
         element.appendChild(chatElement);
         console.log(chatElement.id);
         //display contact info
-        makeReq("GET", "/picture/group/" + id, 200, display_pictures);
+        makeReq("GET", "/picture/group/" + currGroup, 200, display_pictures);
         //display messages
-        makeReq("GET", "/group/" + id, 200, display_chat);
+        makeReq("GET", "/group/" + currGroup, 200, display_chat);
         //message bar
         var newElement = document.createElement("messagebar");
         newElement.classList.add("textBarWrapper");
@@ -81,6 +84,7 @@ function chatScreen(id){
         textArea.addEventListener("keypress", submitOnEnter);
         newElement.appendChild(textArea);
         element.appendChild(newElement);
+        setTimeout(poller, timeout);
     }
     currScreen = 0;
 }
@@ -99,6 +103,7 @@ function profileScreen(id){
     removeAll(id);
     document.getElementById(id).innerHTML = "Profile test! " + currGroup;
     currScreen = 1;
+    lastTimeStamp = 0;
     console.log(currScreen);
 }
 function contacts(id){
@@ -148,25 +153,27 @@ function setGroup(id){
         console.log(id);
         //display contact info
         makeReq("GET", "/picture/group/" + id, 200, display_pictures);
-        //display messages
-        makeReq("GET", "/group/" + id, 200, display_chat);
     }else if(currScreen == 1){
         profileScreen('lastColumn');
     }
     
 }
 function display_chat(responseText){
+    var response = JSON.parse(responseText);
     if(currScreen == 0){
-        var chatElement = document.getElementById("chatElement");
-        chatElement.innerHTML = "";
-        var response = JSON.parse(responseText);
-        console.log(response)
-        var node = document.createElement("emptyNode");
-        chatElement.appendChild(node);
-        //add messages here  
         if(Array.isArray(response)){
             username = document.URL.split('/').pop();
             console.log(username);
+            if(response[0][2] == lastTimeStamp && currGroup == prevGroup){
+                return 0;
+            }
+            prevGroup = currGroup;
+            var chatElement = document.getElementById("chatElement");
+            var node = document.createElement("emptyNode");
+            chatElement.innerHTML = "";
+            chatElement.appendChild(node);
+            //add messages here  
+            lastTimeStamp = response[0][2];
             for(var i = 0 ; i < response.length; i++){
                 var newNode = document.createElement("msgBLOCK"); 
                 newNode.classList.add("message");            
@@ -185,6 +192,7 @@ function display_chat(responseText){
                 chatElement.insertBefore(newNode, node);
                 node = newNode;
             }
+            chatElement.scrollTop = chatElement.scrollHeight;
         }
     }
 }
@@ -208,4 +216,12 @@ function display_pictures(responseText){
 function sendMessage(){
     var textToSend = document.getElementById("textArea").value;
     console.log(textToSend);
+    username = document.URL.split('/').pop();
+    makeReq("POST", "/send/" + username + "/" + currGroup + "/" + textToSend, 200, null, textToSend);
+}
+function poller(){
+    if(currScreen == 0){
+        makeReq("GET", "/group/" + currGroup, 200, display_chat);
+        setTimeout(poller, timeout);
+    }
 }
