@@ -121,20 +121,28 @@ def get_chat_history(id, offset):
     chatHistory = Message.query.filter_by(group_id=id).all()
     if chatHistory:
         limit = 50
-        messages = ["" for x in range(len(chatHistory))]
-        senders = [0 for x in range(len(chatHistory))]
+        messages = []
+        senders = []
+        timestamps = []
         for idx, row in enumerate(reversed(chatHistory), start=offset):
             if idx >= limit:
                 break
             if (idx + offset) >= len(chatHistory):
                 break
-            messages[idx] = row.message
-            senders[idx] = row.sender_id
-            senders[idx] = Profile.query.filter_by(id=senders[idx]).first().display_name
-            retval = zip(messages, senders)
+            messages.append(row.message)
+            senders.append(Profile.query.filter_by(id=row.sender_id).first().display_name)
+            timestamps.append(row.time_stamp)
+            retval = zip(messages, senders, timestamps)
         return list(retval)
     return "No more messages"
-
+def get_profile_picture(id):
+    profile = Profile.query.filter_by(uID=id).first_or_404()
+    if(profile.pic_path == None):
+        return "default"
+    return profile.pic_path
+def get_all_users_in_group(groupid):
+    users = GroupContact.query.filter_by(group_id=groupid).all()
+    return users
 #def lookup_user(userid):
 
 #def delete_group(groupid):

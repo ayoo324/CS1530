@@ -95,7 +95,23 @@ def chat_page(username=None, groupid=None, profileid=None):
 @app.route("/group/<groupid>/<offset>", methods = ["POST","GET"])
 def get_chathistory(groupid=None, offset=None):
     return jsonify(get_chat_history(groupid, offset))
-    
+
+@app.route("/picture/user/<userid>", methods= ["GET"])
+def get_picture_by_user(userid=None):
+    return jsonify(get_picture(userid))
+
+@app.route("/picture/group/<groupid>", methods= ["GET"])
+def get_pictures_by_group(groupid=None):
+    pictures = []
+    for user in get_all_users_in_group(groupid):
+        pictures.append(get_profile_picture(user.user_id))
+    return jsonify(pictures)
+
+#Helper method that takes in a user id and gets the profile picture path
+def get_picture(id):
+    return jsonify(get_profile_picture(id))
+
+
 @app.route("/contact_list/<username>", methods=["GET"])
 def getContactList(username=None):
     #check if user is in session

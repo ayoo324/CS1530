@@ -1,8 +1,9 @@
 #-----------MODELS
 # User Model
 from flask_sqlalchemy import SQLAlchemy
+
 import datetime
- 
+
 db = SQLAlchemy()
 
 class User(db.Model):
@@ -29,6 +30,7 @@ class Message(db.Model):
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'))
     message = db.Column(db.String, nullable = False) 
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    time_stamp = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     def __init__(self, userid, groupid, message):
         self.sender_id = userid
         self.group_id = groupid
