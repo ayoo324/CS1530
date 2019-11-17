@@ -103,9 +103,11 @@ def get_picture_by_user(userid=None):
 @app.route("/picture/group/<groupid>", methods= ["GET"])
 def get_pictures_by_group(groupid=None):
     pictures = []
+    names = []
     for user in get_all_users_in_group(groupid):
         pictures.append(get_profile_picture(user.user_id))
-    return jsonify(pictures)
+        names.append(getUsername(user.user_id))
+    return jsonify(list(zip(names, pictures)))
 
 #Helper method that takes in a user id and gets the profile picture path
 def get_picture(id):

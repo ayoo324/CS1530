@@ -23,7 +23,8 @@ def listAllContacts(id):
         retVal += user.username
         retVal += ","
     return retVal
-
+def getUsername(id):
+    return User.query.filter_by(id=id).first_or_404().username
 def listAllGroups(id):
     list1 = GroupContact.query.filter_by(user_id=id).all()
     list2 = ""
