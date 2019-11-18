@@ -39,9 +39,7 @@ def create_user():
             else:
                 print("User does not exist, adding user")
                 #need to do some user/password/email validation
-                new = User(username=request.form["username"], password=request.form["password"], email=request.form["email"])
-                db.session.add(new)
-                db.session.commit()
+                newUser(request.form["username"], request.form["password"], request.form["email"])
                 print("user successfully created.")
     return render_template("register.html")
 

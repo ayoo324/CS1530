@@ -178,9 +178,8 @@ def deny_request(requestee, requestor):
 def remove_friend(username1, username2):
     #remove from contact list
     toRemove = ContactList.query.filter_by(user_id1=getID(username1), user_id2=getID(username2))
-    if not toRemove:
-        toRemove = ContactList.query.filter_by(user_id2=getID(username1), user_id1=getID(username2))
-    print(toRemove)
+    toRemove.delete()
+    toRemove = ContactList.query.filter_by(user_id2=getID(username1), user_id1=getID(username2))
     toRemove.delete()
     #remove from groupcontact and grab group id for the two
     groupsC1 = GroupContact.query.filter_by(user_id=getID(username1)).all()
