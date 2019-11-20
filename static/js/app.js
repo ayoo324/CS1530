@@ -61,7 +61,9 @@ function chatScreen(id){
         var groupInfoElement = document.createElement("groupInfo");
         groupInfoElement.classList.add("groupinfo");
         groupInfoElement.id = "groupElement";
-        groupInfoElement.innerHTML = "<p> Chat test! With contact : " + currGroup + "</p>";
+        //code for editing the group
+        //groupInfoElement.innerHTML = "<p> Chat test! With contact : " + currGroup + "</p>";
+
         element.appendChild(groupInfoElement);
         //create the chat element
         var chatElement = document.createElement("chat");
@@ -87,6 +89,37 @@ function chatScreen(id){
         setTimeout(poller, timeout);
     }
     currScreen = 0;
+}
+
+function modGroup(responseText){
+    //response will be true if it is a group chat
+    //false if it is not a group chat
+    //mod group page
+    currScreen = 3;
+    //clear the column
+    element = document.getElementById("lastColumn");
+    removeAll(element);
+    outerDiv = document.createElement("modGroupDiv");
+    outerDiv.classList.add("modGroupOuterDivClass");
+    element.appendChild(outerDiv);
+    textArea = document.createElement("textarea");
+    textArea.placeholder = "Enter username here...";
+    textArea.name = "userToMod";
+    textArea.id = "userArea";
+    textArea.classList.add("modGroupTextBar");
+    outerDiv.appendChild(textArea);
+    //now we have our options of add to group or remove from group but first
+    //we need to find out if our group is a group chat or not
+    addButton = document.createElement("addToGroup");
+    addButton.classList.add("addButtonClassList");
+    addButton.innerHTML = "add";
+    addButton.addEventListener("click", makeReq("POST", "/add_to_group/" + currGroup, 200, null, textArea.value))
+    if(responseText == false){
+        removeButton = document.createElement("removeFromGroup");
+        removeButton.classList.add("removeButtonClassList");
+        removeButton.innerHTML = "remove";
+        removeButton.addEventListener("click", makeReq("POST", "/remove_from_group/" + currGroup, 200, null, textArea.value));
+    }
 }
 function eraseChatBar(){
     var element = document.getElementById("textArea");
@@ -356,7 +389,7 @@ function userFound(responseText){
 function leave_group(){
     username = document.getElementById("usernameArea").value;
     console.log(username);
-    makeReq("POST", "/leave_group/" + document.URL.split('/').pop(), 200, removegroup, username)
+    makeReq("POST", "/leave_group/" + document.URL.split('/').pop(), 200, removegroup, username);
 }
 function createContactList(responseText){
     console.log(responseText);
@@ -392,8 +425,8 @@ function setGroup(id){
     }else if(currScreen == 1){
         profileScreen('lastColumn');
     }
-    
-}function display_chat(responseText){
+}
+function display_chat(responseText){
     var response = JSON.parse(responseText);
     if(currScreen == 0){
         if(Array.isArray(response)){
@@ -447,6 +480,13 @@ function display_pictures(responseText){
         header.appendChild(picture);
         header.appendChild(name);
     }
+    //add to group element
+    /*var modGroupElement = document.createElement("mod");
+    //modGroupElement.classList.add("modToGroup");
+    modGroupElement.id = "modGroupButton";
+    modGroupElement.innerText = "Modify Group";
+    modGroupElement.addEventListener("click", makeReq("GET", "/groupInfo/" + currGroup, 200, modGroup));
+    groupInfoElement.appendChild(modGroupElement);*/
 }
 function sendMessage(){
     var textToSend = document.getElementById("textArea").value;

@@ -119,7 +119,7 @@ def get_pictures_by_group(groupid=None):
     names = []
     for user in get_all_users_in_group(groupid):
         pictures.append(get_profile_picture(user.user_id))
-        names.append(getUsername(user.user_id))
+        names.append(get_display_name(user.user_id))
     return jsonify(list(zip(names, pictures)))
 
 #Helper method that takes in a user id and gets the profile picture path

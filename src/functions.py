@@ -34,7 +34,7 @@ def listAllGroups(id):
         list2+= str(group.group_id) + ":"
         for currId in check:
             if(currId.user_id != id):
-                list2 += User.query.filter_by(id=currId.user_id).first_or_404().username + " "
+                list2 += Profile.query.filter_by(uID=currId.user_id).first_or_404().display_name + " "
                 print(User.query.filter_by(id=currId.user_id).first_or_404().username)
         list2+= ","
     return list2
@@ -137,6 +137,8 @@ def get_chat_history(id, offset):
             retval = zip(messages, senders, timestamps)
         return list(retval)
     return "No more messages"
+def get_display_name(id):
+    return Profile.query.filter_by(id=id).first().display_name
 def get_profile_picture(id):
     profile = Profile.query.filter_by(uID=id).first_or_404()
     if(profile.pic_path == None):
