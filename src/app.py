@@ -217,6 +217,16 @@ def change_display_n(new_display_name=None, username=None):
         #admin = User.query.filter_by(username= username).update(dict(password=new_password))
     return "Something failed"
 
+@app.route("/change_profile_pic/<username>/<pic_select>", methods = ["POST"])
+def change_profile_p(pic_select=None, username=None):
+    if request.method == 'POST': 
+        print(getID(username))
+        curr_user = Profile.query.filter_by(uID=getID(username)).first()
+        curr_user.pic_path = pic_select
+        db.session.commit()
+        #admin = User.query.filter_by(username= username).update(dict(password=new_password))
+    return "Something failed"    
+
 @app.route("/show_password/<username>", methods=["GET"])
 def showPassword(username=None):
     print("here!!")
@@ -226,6 +236,16 @@ def showPassword(username=None):
         print(getID(username))
         list21 = User.query.filter_by(id=getID(username)).first()
         return jsonify(list21.password)
+
+@app.route("/email_address/<username>", methods=["GET"])
+def showEmaild(username=None):
+    print("here!!")
+    if "username" not in session:
+        return render_template("landing.html")
+    else:
+        print(getID(username))
+        list22 = User.query.filter_by(id=getID(username)).first()
+        return jsonify(list22.email)
         
 @app.route("/users/", methods=["GET"])
 @app.route("/remove/<username>", methods=["POST"])
