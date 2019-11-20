@@ -99,12 +99,91 @@ function submitOnEnter(event){
         eraseChatBar();
     }
 }
+var curr_user_displayname;
+function show_message(responseText){
+    curr_user_displayname = JSON.parse(responseText);
+    alert("this is ：" + curr_user_displayname);
+}
+function change_display_name(){
+    username = document.URL.split('/').pop();
+    new_display_name = document.getElementById("usernameA").value;
+    makeReq("POST", "/change_display_name/" + username + "/" + new_display_name, 200, null);
+    alert("display name changed");
+}
 function profileScreen(id){
     removeAll(id);
-    document.getElementById(id).innerHTML = "Profile test! " + currGroup;
+    username = document.URL.split('/').pop();
+
+    makeReq("GET", "/show_profile_name/" + username, 200, show_message);
+
+    //document.getElementById(id).innerHTML = "Profile Test! " + username;
+    panel = document.getElementById(id);
+    panel.innerHTML = "";
+    //makeReq("GET", "/show_profile_picture/" + username, 200, show_message);
+    
+    
+    panel.innerHTML = "Profile Page ";
+    console.log(curr_user_displayname);
+    //alert(curr_user_displayname);
+
+    buttons = document.createElement("buttons");
+    see = document.createElement("changeButton");
+    textArea3 = document.createElement("textarea");
+    textArea3.classList.add("new_display_name");
+    textArea3.placeholder = "new_display_name...";
+    textArea3.id = "usernameA";
+
+    see1 = document.createElement("submitButton");
+    textArea2 = document.createElement("textarea");
+    textArea2.classList.add("old_password");
+    textArea2.placeholder = "old_password...";
+    textArea2.id = "old_password";
+
+
+    textArea1 = document.createElement("textarea");
+    textArea1.classList.add("new_password");
+    textArea1.placeholder = "new_password...";
+    textArea1.id = "new_password";
+
+
+    see.innerHTML = "<p><button onclick=\"change_display_name()\">change</button>";
+    see1.innerHTML = "<p><button onclick=\"check_password()\">submit</button>";
+
+    panel.appendChild(textArea3);
+    panel.appendChild(textArea2);
+    panel.appendChild(textArea1);
+    buttons.appendChild(see1);
+
+    buttons.appendChild(see);
+    panel.appendChild(buttons);
+    //get the user information from profile.db
+
+    //makeReq("POST", "/chang_password/" + username + "/" + new_password, 200, null);
+    //alert("newpassword");
+
     currScreen = 1;
     lastTimeStamp = 0;
     console.log(currScreen);
+}
+function check_password(){
+    username = document.URL.split('/').pop();
+    makeReq("GET", "/show_password/" + username, 200, check_password2);
+}
+
+function check_password2(responseText){
+    old_password1 = document.getElementById("old_password").value;
+    new_password = 
+    curr_password = JSON.parse(responseText);
+    if (old_password1 === curr_password){
+        new_password = document.getElementById("new_password").value;
+        if (new_password === ""){
+            alert("your new password cannot be empty");}
+        else{
+            makeReq("POST", "/chang_password/" + username + "/" + new_password, 200, null);}
+    }
+    else{
+        alert("you typed in old password wrong");
+    }
 }
 function contacts(id){
     ContactList = document.getElementById(id);

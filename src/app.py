@@ -175,6 +175,58 @@ def lookupUser(username=None):
         return jsonify(user.username)
     return "-2"
 
+@app.route("/show_profile_picture/<username>", methods=["GET"])
+def getProfilePic(username=None):
+    print("i m")
+    if "username" not in session:
+        return render_template("landing.html")
+    else:
+        print(getID(username))
+        list20 = Profile.query.filter_by(uID=getID(username)).first()
+        return jsonify(list20.pic_path)  
+
+@app.route("/show_profile_name/<username>", methods=["GET"])
+def getProfileName(username=None):
+    print("here!!")
+    if "username" not in session:
+        return render_template("landing.html")
+    else:
+        print(getID(username))
+        list20 = Profile.query.filter_by(uID=getID(username)).first()
+        return jsonify(list20.display_name)
+   
+
+@app.route("/chang_password/<username>/<new_password>", methods = ["POST"])
+def chang_pass(new_password=None, username=None):
+    if request.method == 'POST': 
+        print(getID(username))
+        curr_user = User.query.filter_by(id=getID(username)).first()
+        curr_user.password = new_password
+        db.session.commit()
+        #admin = User.query.filter_by(username= username).update(dict(password=new_password))
+    return "Something failed"
+
+@app.route("/change_display_name/<username>/<new_display_name>", methods = ["POST"])
+def change_display_n(new_display_name=None, username=None):
+    if request.method == 'POST': 
+        print(getID(username))
+        print("try to change")
+        curr_user = Profile.query.filter_by(uID=getID(username)).first()
+        curr_user.display_name = new_display_name
+        db.session.commit()
+        #admin = User.query.filter_by(username= username).update(dict(password=new_password))
+    return "Something failed"
+
+@app.route("/show_password/<username>", methods=["GET"])
+def showPassword(username=None):
+    print("here!!")
+    if "username" not in session:
+        return render_template("landing.html")
+    else:
+        print(getID(username))
+        list21 = User.query.filter_by(id=getID(username)).first()
+        return jsonify(list21.password)
+        
 @app.route("/users/", methods=["GET"])
 @app.route("/remove/<username>", methods=["POST"])
 def removeFriend(username=None):
