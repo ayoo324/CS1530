@@ -99,10 +99,13 @@ function submitOnEnter(event){
         eraseChatBar();
     }
 }
+//-------------
 var curr_user_displayname;
 function show_message(responseText){
     curr_user_displayname = JSON.parse(responseText);
-    alert("this is ：" + curr_user_displayname);
+    document.getElementById("display_name1").innerHTML= "display name: "+ curr_user_displayname;
+
+    //alert("this is ：" + curr_user_displayname);
 }
 function change_display_name(){
     username = document.URL.split('/').pop();
@@ -113,53 +116,78 @@ function change_display_name(){
 function profileScreen(id){
     removeAll(id);
     username = document.URL.split('/').pop();
-
     makeReq("GET", "/show_profile_name/" + username, 200, show_message);
-
     //document.getElementById(id).innerHTML = "Profile Test! " + username;
     panel = document.getElementById(id);
-    panel.innerHTML = "";
-    //makeReq("GET", "/show_profile_picture/" + username, 200, show_message);
-    
-    
-    panel.innerHTML = "Profile Page ";
+    panel.innerHTML = "";   
+    var img = document.createElement("img");
+    img.setAttribute("id", "profileppp");
+    makeReq("GET", "/show_profile_picture/" + username, 200, show_message1);
+    console.log(img);
+    panel.innerHTML = "Pofile Page ";
+// email, username and displayname
+    var username1 = document.createElement("P");
+    username1.innerHTML = "username: " + username;
+    panel.appendChild(username1);
+
+    var display_name1 = document.createElement("P");
+    display_name1.setAttribute("id", "display_name1");
+    panel.appendChild(display_name1);
+
+    var email = document.createElement("P");
+    email.setAttribute("id", "email_address");
+    makeReq ("GET", "/email_address/" +username, 200, show_email);
+    panel.appendChild(email);
     console.log(curr_user_displayname);
     //alert(curr_user_displayname);
-
+    panel.appendChild(img);
+    see2 = document.createElement("changeButton");
+    see2.innerHTML = "<p><button onclick=\"change_profile_pic()\">change pic</button>";  
     buttons = document.createElement("buttons");
     see = document.createElement("changeButton");
     textArea3 = document.createElement("textarea");
     textArea3.classList.add("new_display_name");
     textArea3.placeholder = "new_display_name...";
     textArea3.id = "usernameA";
-
     see1 = document.createElement("submitButton");
     textArea2 = document.createElement("textarea");
     textArea2.classList.add("old_password");
     textArea2.placeholder = "old_password...";
     textArea2.id = "old_password";
-
-
     textArea1 = document.createElement("textarea");
     textArea1.classList.add("new_password");
     textArea1.placeholder = "new_password...";
     textArea1.id = "new_password";
-
-
-    see.innerHTML = "<p><button onclick=\"change_display_name()\">change</button>";
-    see1.innerHTML = "<p><button onclick=\"check_password()\">submit</button>";
-
+    see.innerHTML = "<p><button onclick=\"change_display_name()\">change name</button>";
+    see1.innerHTML = "<p><button onclick=\"check_password()\">change pw</button>";
+    see.classList.add("change_button");
+    var x = document.createElement("SELECT");
+    x.setAttribute("id", "mySelect");
+    panel.appendChild(x);  
+    var z = document.createElement("option");
+    z.setAttribute("value", "apple");
+    var z1= document.createElement("option");
+    z1.setAttribute("value", "banana");
+    var t = document.createTextNode("apple");
+    var t1 = document.createTextNode("banana");
+    z.appendChild(t);
+    z1.appendChild(t1);
+    document.getElementById("mySelect").appendChild(z);
+    document.getElementById("mySelect").appendChild(z1);
+    console.log(x.value);
     panel.appendChild(textArea3);
     panel.appendChild(textArea2);
     panel.appendChild(textArea1);
-    buttons.appendChild(see1);
-
+    buttons.appendChild(see2);
     buttons.appendChild(see);
+    buttons.appendChild(see1);
     panel.appendChild(buttons);
     //get the user information from profile.db
 
     //makeReq("POST", "/chang_password/" + username + "/" + new_password, 200, null);
     //alert("newpassword");
+
+
 
     currScreen = 1;
     lastTimeStamp = 0;
@@ -179,12 +207,34 @@ function check_password2(responseText){
         if (new_password === ""){
             alert("your new password cannot be empty");}
         else{
-            makeReq("POST", "/chang_password/" + username + "/" + new_password, 200, null);}
+            makeReq("POST", "/chang_password/" + username + "/" + new_password, 200, null);}     
     }
     else{
         alert("you typed in old password wrong");
     }
+
 }
+function change_profile_pic(){
+    pic_select = document.getElementById("mySelect").value;
+    console.log(pic_select);
+    makeReq("POST", "/change_profile_pic/" + username + "/" + pic_select, 200, null);
+    alert("success");
+}
+function show_message1(responseText){
+    user_pic= JSON.parse(responseText);
+    if(user_pic === null){
+        user_pic = "default";
+    }
+    document.getElementById("profileppp").src = "../static/images/" + user_pic + ".png";
+    console.log(document.getElementById("profileppp").src);
+}
+
+function show_email(responseText){
+    user_email= JSON.parse(responseText);
+    document.getElementById("email_address").innerHTML = "email: "+ user_email;
+}
+
+
 function contacts(id){
     ContactList = document.getElementById(id);
     console.log(ContactList.ClassList);
