@@ -63,7 +63,10 @@ def addFriend(id1, id2):
     db.session.commit()
 
 def addToGroup(groupID, id):
-    groupCheck = Group.query.filter_by(id=groupID).first_or_404()
+    groupCheck = Group.query.filter_by(id=groupID).first()
+    existCheck = User.query.filter_by(id=id).first()
+    if not existCheck:
+        return False
 
     if groupCheck.is_group_chat is False:
         #group chat is a chat for only two people -- create a new group
@@ -80,6 +83,16 @@ def addToGroup(groupID, id):
         #actually add the member to the group
         groupContact = GroupContact(groupID, id)
         db.session.add(groupContact)
+        db.session.commit()
+def removeFromGroup(groupID, id):
+    groupCheck = Group.query.filter_by(id=groupID).first()
+    if groupCheck is None:
+        return False
+    elif groupCheck.is_group_chat is False:
+        return False
+    else:
+        print("Removing")
+        GroupContact.query.filter_by(group_id=groupID, user_id=id).delete()
         db.session.commit()
 
 def sendMessage(username, groupID, message):
@@ -98,6 +111,7 @@ def create_chat():
 
 #creates a group for 2 or more people
 def create_group():
+    print("Creating group chat!")
     newGroup = Group()
     newGroup.is_group_chat = True
     #add the session to group
@@ -202,6 +216,9 @@ def remove_friend(username1, username2):
                     db.session.commit()
                     return "Removed contact successfully"
     return "No match found"
+
+def isGroupChat(groupid):
+    return Group.query.filter_by(id=groupid).first().is_group_chat
 
 #def lookup_user(userid):
 

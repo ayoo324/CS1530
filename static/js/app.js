@@ -1,5 +1,8 @@
 var timeout = 750;
 var lastTimeStamp = 0;
+
+var moddingGroup = false;
+
 //Functions for XMLHttpRequest
 function makeReq(method, target, retCode, action, data) {
     var httpRequest = new XMLHttpRequest();
@@ -42,8 +45,10 @@ var prevScreen = null;
 var node = null;
 function removeAll(id){
     const myNode = document.getElementById(id);
-    while (myNode.firstChild) {
-      myNode.removeChild(myNode.firstChild);
+    if(myNode.hasChildNodes()){
+        while (myNode.firstChild) {
+        myNode.removeChild(myNode.firstChild);
+        }
     }
 }
 function chatScreen(id){
@@ -54,9 +59,11 @@ function chatScreen(id){
     else if(currGroup == prevGroup && currScreen == 0){
         console.log("no change");
     }
-    else{
-        removeAll(id);
+    else{     
+        moddingGroup = false;
         var element = document.getElementById(id);
+        removeAll(id);
+        
         //create the group info element
         var groupInfoElement = document.createElement("groupInfo");
         groupInfoElement.classList.add("groupinfo");
@@ -90,18 +97,22 @@ function chatScreen(id){
     }
     currScreen = 0;
 }
-
 function modGroup(responseText){
+    if(moddingGroup){
+        removeAll("modGroup");
+        moddingGroup = false;
+        return false;
+    }
+    moddingGroup = true;
     //response will be true if it is a group chat
     //false if it is not a group chat
-    //mod group page
-    currScreen = 3;
     //clear the column
+    console.log(responseText);
     element = document.getElementById("lastColumn");
-    removeAll(element);
     outerDiv = document.createElement("modGroupDiv");
+    outerDiv.id = "modGroup";
     outerDiv.classList.add("modGroupOuterDivClass");
-    element.appendChild(outerDiv);
+    element.insertBefore(outerDiv, element.childNodes[0]);
     textArea = document.createElement("textarea");
     textArea.placeholder = "Enter username here...";
     textArea.name = "userToMod";
@@ -113,13 +124,40 @@ function modGroup(responseText){
     addButton = document.createElement("addToGroup");
     addButton.classList.add("addButtonClassList");
     addButton.innerHTML = "add";
-    addButton.addEventListener("click", makeReq("POST", "/add_to_group/" + currGroup, 200, null, textArea.value))
-    if(responseText == false){
+    outerDiv.appendChild(addButton);
+    addButton.addEventListener("click", addToGroup);
+    if(responseText == "True"){
         removeButton = document.createElement("removeFromGroup");
         removeButton.classList.add("removeButtonClassList");
         removeButton.innerHTML = "remove";
-        removeButton.addEventListener("click", makeReq("POST", "/remove_from_group/" + currGroup, 200, null, textArea.value));
+        removeButton.addEventListener("click", removeFromGroup);
+        outerDiv.appendChild(removeButton);
     }
+}
+function addToGroup(responseText){
+    var textArea = document.getElementById("userArea");
+    if(textArea)
+        makeReq("POST", "/add_to_group/" + currGroup, 200, refreshchatScreen, textArea.value);
+}
+function removeFromGroup(responseText){
+    var textArea = document.getElementById("userArea");
+    if(textArea)
+        makeReq("POST", "/remove_from_group/" + currGroup, 200, refreshchatScreen, textArea.value);
+}
+function refreshchatScreen(responseText){
+    console.log("Refreshing chat screen");
+    console.log(responseText);
+    if(responseText == "True"){
+        console.log
+        lastButton = null;
+        currGroup = null;
+        prevGroup = null;
+        currScreen = null;
+        prevScreen = null;
+        node = null;
+    }
+    chatScreen("lastColumn");
+    refreshContacts();
 }
 function eraseChatBar(){
     var element = document.getElementById("textArea");
@@ -270,8 +308,8 @@ function show_email(responseText){
 
 function contacts(id){
     ContactList = document.getElementById(id);
-    console.log(ContactList.ClassList);
-    console.log(document.URL);
+    //console.log(ContactList.ClassList);
+    //console.log(document.URL);
     if(ContactList.classList.contains("column")){
         ContactList.classList.remove("column");
         removeAll(id);
@@ -481,12 +519,18 @@ function display_pictures(responseText){
         header.appendChild(name);
     }
     //add to group element
-    /*var modGroupElement = document.createElement("mod");
+    var modGroupElement = document.createElement("mod");
     //modGroupElement.classList.add("modToGroup");
     modGroupElement.id = "modGroupButton";
     modGroupElement.innerText = "Modify Group";
-    modGroupElement.addEventListener("click", makeReq("GET", "/groupInfo/" + currGroup, 200, modGroup));
-    groupInfoElement.appendChild(modGroupElement);*/
+    modGroupElement.addEventListener("click", requestMod);
+    header.appendChild(modGroupElement);
+}
+function requestMod(){
+    console.log("current group");
+    console.log(currGroup);
+    var url = "/get_group/" + currGroup;
+    makeReq("GET", url, 200, modGroup);
 }
 function sendMessage(){
     var textToSend = document.getElementById("textArea").value;
@@ -499,4 +543,7 @@ function poller(){
         makeReq("GET", "/group/" + currGroup, 200, display_chat);
         setTimeout(poller, timeout);
     }
+}
+function refreshContacts(){
+    contacts('contactColumn');
 }

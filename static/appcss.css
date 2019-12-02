@@ -46,6 +46,12 @@
   display: table;
   clear: both;
 }
+.groupElement{
+  width: 100%;
+  content: "";
+  display: table;
+  clear: both;
+}
 .groupinfo{
   content: "";
   height: 8%;
@@ -123,6 +129,12 @@
 
 .columnbuttons div button{
   background-color: blueviolet;
+}
+.addButtonClassList{
+  padding: 20px;
+}
+.removeButtonClassList{
+  padding: 20px;
 }
 .new_display_name {
   resize: none;

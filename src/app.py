@@ -227,9 +227,27 @@ def change_profile_p(pic_select=None, username=None):
         #admin = User.query.filter_by(username= username).update(dict(password=new_password))
     return "Something failed"    
 
+@app.route("/get_group/<group_id>", methods=["GET"])
+@app.route("/remove_from_group/<group_id>", methods=["POST"])
+@app.route("/add_to_group/<group_id>", methods=["POST"])
+def modGroup(group_id=None):
+    data = request.get_data(True, True, False)
+    if request.method == 'GET':
+        return str(isGroupChat(group_id))
+    if request.method == 'POST':
+        if 'remove' in request.path:
+            removeFromGroup(group_id, getID(data))
+            print("SESSION")
+            print(session['username'])
+            if session['username'] == data:
+                return str(True)
+        elif 'add' in request.path:
+            addToGroup(group_id, getID(data))
+    return str(False)
+
+
 @app.route("/show_password/<username>", methods=["GET"])
 def showPassword(username=None):
-    print("here!!")
     if "username" not in session:
         return render_template("landing.html")
     else:
@@ -315,6 +333,7 @@ def initdb():
     create_request(test10.username, test12.username)
     create_request(test11.username, test12.username)
     create_request(Owner.username, test12.username)
+
     addToGroup(2, test10.id)
     
     
