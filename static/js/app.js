@@ -45,6 +45,7 @@ var currGroup = null;
 var prevGroup = null;
 var currScreen = null;
 var prevScreen = null;
+var pollGroup = null;
 var node = null;
 function removeAll(id){
     const myNode = document.getElementById(id);
@@ -57,6 +58,8 @@ function removeAll(id){
 function chatScreen(id){
     console.log(id);
     console.log("Chat screen");
+    if(currScreen != 0)
+        return false;
     if(currGroup == null)
         document.getElementById(id).innerHTML = "no contact selected!";
     else if(currGroup == prevGroup && currScreen == 0){
@@ -84,7 +87,7 @@ function chatScreen(id){
         //display contact info
         makeReq("GET", "/picture/group/" + currGroup, 200, display_pictures);
         //display messages
-        makeReq("GET", "/group/" + currGroup, 200, display_chat, null, currGroup);
+        //makeReq("GET", "/group/" + currGroup, 200, display_chat, null, currGroup);
         //message bar
         var newElement = document.createElement("messagebar");
         newElement.classList.add("textBarWrapper");
@@ -96,7 +99,6 @@ function chatScreen(id){
         textArea.addEventListener("keypress", submitOnEnter);
         newElement.appendChild(textArea);
         element.appendChild(newElement);
-        setTimeout(poller, timeout);
     }
     currScreen = 0;
 }
@@ -690,10 +692,10 @@ function sendMessage(){
     makeReq("POST", "/send/" + username + "/" + currGroup + "/" + textToSend, 200, null, textToSend);
 }
 function poller(){
-    if(currScreen == 0){
+    if(currGroup != null)
         makeReq("GET", "/group/" + currGroup, 200, display_chat, null, currGroup);
-        setTimeout(poller, timeout);
-    }
+    setTimeout(poller, timeout);
+    
 }
 function refreshContacts(){
     contacts('contactColumn');
