@@ -158,6 +158,7 @@ function refreshchatScreen(responseText){
     }
     chatScreen("lastColumn");
     refreshContacts();
+    refreshContacts();
 }
 function eraseChatBar(){
     var element = document.getElementById("textArea");
@@ -187,6 +188,7 @@ function change_display_name(){
 function profileScreen(id){
     removeAll(id);
     username = document.URL.split('/').pop();
+    makeReq("GET", "/is_admin/" + username, 200, display_admin);
     makeReq("GET", "/show_profile_name/" + username, 200, show_message);
     //document.getElementById(id).innerHTML = "Profile Test! " + username;
     panel = document.getElementById(id);
@@ -195,23 +197,26 @@ function profileScreen(id){
     img.setAttribute("id", "profileppp");
     makeReq("GET", "/show_profile_picture/" + username, 200, show_message1);
     console.log(img);
-    panel.innerHTML = "Pofile Page ";
-// email, username and displayname
+    // email, username and displayname
+    var block = document.createElement("Info");
+    block.id = "pBlock";
     var username1 = document.createElement("P");
     username1.innerHTML = "username: " + username;
-    panel.appendChild(username1);
-
+    panel.appendChild(block);
+    block.innerHTML = "Pofile Page ";
+    block.appendChild(username1);
+    block.classList.add("profileBlock");
     var display_name1 = document.createElement("P");
     display_name1.setAttribute("id", "display_name1");
-    panel.appendChild(display_name1);
+    block.appendChild(display_name1);
 
     var email = document.createElement("P");
     email.setAttribute("id", "email_address");
     makeReq ("GET", "/email_address/" +username, 200, show_email);
-    panel.appendChild(email);
+    block.appendChild(email);
     console.log(curr_user_displayname);
     //alert(curr_user_displayname);
-    panel.appendChild(img);
+    block.appendChild(img);
     see2 = document.createElement("changeButton");
     see2.innerHTML = "<p><button onclick=\"change_profile_pic()\">change pic</button>";  
     buttons = document.createElement("buttons");
@@ -234,7 +239,7 @@ function profileScreen(id){
     see.classList.add("change_button");
     var x = document.createElement("SELECT");
     x.setAttribute("id", "mySelect");
-    panel.appendChild(x);  
+    block.appendChild(x);  
     var z = document.createElement("option");
     z.setAttribute("value", "apple");
     var z1= document.createElement("option");
@@ -246,20 +251,17 @@ function profileScreen(id){
     document.getElementById("mySelect").appendChild(z);
     document.getElementById("mySelect").appendChild(z1);
     console.log(x.value);
-    panel.appendChild(textArea3);
-    panel.appendChild(textArea2);
-    panel.appendChild(textArea1);
+    block.appendChild(textArea3);
+    block.appendChild(textArea2);
+    block.appendChild(textArea1);
     buttons.appendChild(see2);
     buttons.appendChild(see);
     buttons.appendChild(see1);
-    panel.appendChild(buttons);
+    block.appendChild(buttons);
     //get the user information from profile.db
 
     //makeReq("POST", "/chang_password/" + username + "/" + new_password, 200, null);
     //alert("newpassword");
-
-
-
     currScreen = 1;
     lastTimeStamp = 0;
     console.log(currScreen);
@@ -304,8 +306,134 @@ function show_email(responseText){
     user_email= JSON.parse(responseText);
     document.getElementById("email_address").innerHTML = "email: "+ user_email;
 }
+function add_user(){ 
+    var username = document.getElementById("userIDtoAdd").value;
+    console.log("adding");
+    console.log(username);
+    var password = document.getElementById("userPWtoAdd").value;
+    var email = document.getElementById("userMAILtoAdd").value;
+    makeReq("POST", "/adminADD/" + username + "/" + password + "/" + email, 200, printOutResponse);
+}
+function remove_user(){
+    var username = document.getElementById("userIDtoRemove").value;
+    console.log("removing");
+    console.log(username);
+    makeReq("POST", "/adminREMOVE/" + username, 200, printOutResponse);
+}
+function dumpDB(){
+    makeReq("GET", "/dump_database", 200, printOutResponse);
+}
+function printOutResponse(responseText){
+    if(responseText == "Success"){
+        var admin = document.getElementById("adminElement");
+        var response = document.createElement("response")
+        response.innerHTML = responseText;
+        admin.insertBefore(response, admin.firstChild);
+        return true;
+    }
+    console.log(responseText);
+    var profile = document.getElementById("pBlock");
+    profile.classList.add("scrollable");
+    removeAll(profile.id);
+    profile.innerHTML = "";
+    var dumped = JSON.parse(responseText);
+    for(x in dumped){
+        profile.innerHTML += "<p>";
+        profile.innerHTML += " username: ";
+        profile.innerHTML += x;
+        profile.innerHTML += " email: ";
+        profile.innerHTML += dumped[x];
+        profile.innerHTML += "</p>";
+    }
+    for(var i = 0; i < dumped.size; i++){
+        
+        console.log(dumped[i]);
+    }
+}
+function display_admin(responseText){
+    console.log("Is admin?");
 
+    console.log(responseText);
+    if(responseText == "False")
+        return false;
+    //response true if the user is an admin
+    //maintenence is done on server and checks session, 
+    //so even if a regular user runs this function,
+    //they wont be able to use the functionality
+    var panel = document.getElementById("lastColumn");
+    var admin = document.createElement("adminPanel");
+    if(document.getElementById("adminElement"))
+        removeAll("adminPanel");
+    admin.id = "adminElement";
+    var functions = document.createElement("adminFunctions");
+    admin.classList.add("adminPanel");
+    functions.classList.add("functionsPanel");
+    panel.appendChild(admin);
+    functions.innerHTML = "<center>Modify database</center>";
+    var add = document.createElement("addBlock");
+    var addUser = document.createElement("button");
+    addUser.innerHTML = "<button onclick=\"add_user()\">Add user</button>";
 
+    var addUserFields = document.createElement("userFields");
+    var breakLine = document.createElement("brk");
+    breakLine.innerHTML = "<p> </p>";
+    var nameField = document.createElement("textarea");
+    nameField.placeholder = "Name...";
+    nameField.setAttribute("type", "text");
+    nameField.name = "addName";
+    nameField.id = "userIDtoAdd";
+    nameField.classList.add("textBar");
+    addUserFields.appendChild(nameField);
+    addUserFields.appendChild(breakLine);
+
+    var passField = document.createElement("textarea");
+    passField.placeholder = "Temp password...";
+    passField.setAttribute("type", "text");
+    passField.name = "addPassword";
+    passField.id = "userPWtoAdd";
+    addUserFields.appendChild(passField);
+    passField.classList.add("textBar");
+    addUserFields.appendChild(breakLine);
+
+    var mailField = document.createElement("textarea");
+    mailField.placeholder = "Email...";
+    mailField.setAttribute("type", "text");
+    mailField.name = "addEmail";
+    mailField.id = "userMAILtoAdd";
+    mailField.classList.add("textBar");
+    addUserFields.appendChild(mailField);
+    addUserFields.appendChild(breakLine);
+
+    add.appendChild(addUserFields);
+    add.appendChild(addUser);
+    add.classList.add("column30");
+    functions.appendChild(add);
+
+    var remove = document.createElement("removeDiv");
+    var removeUser = document.createElement("button");
+    removeUser.innerHTML = "<button onclick=\"remove_user()\">Remove user</button><br>";
+    var removeUserField = document.createElement("removeUserFields");
+    var removeUserField = document.createElement("textarea");
+    removeUserField.placeholder = "Name...";
+    removeUserField.setAttribute("type", "text");
+    removeUserField.name = "removeName";
+    removeUserField.id = "userIDtoRemove";
+    removeUserField.classList.add("textBar");
+    remove.appendChild(removeUserField);
+    removeUserField.classList.add("textBar");
+    remove.appendChild(breakLine);
+    remove.appendChild(removeUser);
+    remove.classList.add("column30");
+    functions.appendChild(remove);
+
+    var dump = document.createElement("dumpDiv");
+    var dumpDatabase = document.createElement("button");
+    dumpDatabase.innerHTML = "<center><button onclick=\"dumpDB()\">Dump database</button></center>";
+    dump.classList.add("column30");
+    dump.appendChild(dumpDatabase);
+    functions.appendChild(dump);
+    admin.appendChild(functions);
+}
 function contacts(id){
     ContactList = document.getElementById(id);
     //console.log(ContactList.ClassList);
@@ -398,6 +526,8 @@ function respondRequest(username, element){
     console.log(arr[1]);
     makeReq("POST", "/request/" + document.URL.split('/').pop(), 200, null, username);
     removeAll(element.id);
+    refreshContacts();
+    refreshContacts();
 }
 function createRequest(){
     username = document.getElementById("usernameArea").value;

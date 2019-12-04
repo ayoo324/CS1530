@@ -20,6 +20,16 @@
   text-indent: 10%;
   border: 5px solid rgb(37, 0, 245);
   height: 800px;
+  overflow-y: hidden;
+  overflow-x: hidden;
+
+}
+.column30{
+  float: left;
+  width: 30%;
+  height: 50%;
+  position: static;
+  border: 5px solid rgb(0, 0, 0);
 }
 .lookupuser{
   float: left;
@@ -78,6 +88,13 @@
   height: 99%;
   width: 100%;
 }
+.textBar{
+  float: left;
+  font-size: 16px;
+  position: sticky;
+  width: 50%;
+  display: block;
+}
 .responseFromServer{
   height: 10%;
   font-size: 16px;
@@ -126,7 +143,32 @@
 .columnbuttons div{
   text-align:center;
 }
-
+.profileBlock{
+  float: left;
+  width: 100%;
+  height: 65%;
+  display: block;
+}
+.adminPanel{
+  float: left;
+  width: 100%;
+  bottom: 0%;
+  height: 100%;
+  display: block;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: blue;
+  border-style: solid;
+}
+.functionsPanel{
+  float: left;
+  width: 100%;
+  height: 40%;
+  content: "";
+  display: table;
+  clear: both;
+  display: block;
+}
 .columnbuttons div button{
   background-color: blueviolet;
 }

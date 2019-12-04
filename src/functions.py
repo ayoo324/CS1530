@@ -61,13 +61,15 @@ def addFriend(id1, id2):
     db.session.add(groupContact)
     db.session.add(groupContact2)
     db.session.commit()
-
+def dump():
+    return User.query.all()
 def addToGroup(groupID, id):
     groupCheck = Group.query.filter_by(id=groupID).first()
     existCheck = User.query.filter_by(id=id).first()
     if not existCheck:
         return False
-
+    if not groupCheck:
+        return False
     if groupCheck.is_group_chat is False:
         #group chat is a chat for only two people -- create a new group
         newGroup = create_group()
@@ -84,6 +86,35 @@ def addToGroup(groupID, id):
         groupContact = GroupContact(groupID, id)
         db.session.add(groupContact)
         db.session.commit()
+
+def removeUser(id):
+    #remove from contactlist
+    ContactList.query.filter_by(user_id1=id).delete()
+    ContactList.query.filter_by(user_id2=id).delete()
+    #remove from messages
+    Message.query.filter_by(sender_id=id).delete()
+    #remove profile
+    Profile.query.filter_by(uID=id).delete()
+    #remove requests
+    Request.query.filter_by(requestee=id).delete()
+    Request.query.filter_by(requestor=id).delete()
+    #remove user
+    User.query.filter_by(id=id).delete()
+    #remove groupContact
+    GroupContact.query.filter_by(user_id=id).delete()
+    db.session.commit()
+    pruneGroups()
+    return True
+    
+def pruneGroups():
+    #removes useless groups
+    groups = GroupContact.query.all()
+    for group in groups:
+        if(GroupContact.query.filter_by(group_id=group.group_id).count() < 2):
+            GroupContact.query.filter_by(group_id=group.group_id).delete()
+            Group.query.filter_by(id=group.group_id).delete()
+    db.session.commit()
+
 def removeFromGroup(groupID, id):
     groupCheck = Group.query.filter_by(id=groupID).first()
     if groupCheck is None:

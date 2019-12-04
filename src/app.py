@@ -11,7 +11,7 @@ template_dir = os.path.abspath('../templates')
 static_dir =  os.path.abspath('../static')
 
 app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
-
+admins = ['owner']
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(
     app.root_path, "database.db"
 )
@@ -226,7 +226,11 @@ def change_profile_p(pic_select=None, username=None):
         db.session.commit()
         #admin = User.query.filter_by(username= username).update(dict(password=new_password))
     return "Something failed"    
-
+@app.route("/is_admin/<username>", methods = ["GET"])
+def is_admin(username=None):
+    if username in admins:
+        return str(True)
+    return str(False)
 @app.route("/get_group/<group_id>", methods=["GET"])
 @app.route("/remove_from_group/<group_id>", methods=["POST"])
 @app.route("/add_to_group/<group_id>", methods=["POST"])
@@ -254,6 +258,34 @@ def showPassword(username=None):
         print(getID(username))
         list21 = User.query.filter_by(id=getID(username)).first()
         return jsonify(list21.password)
+
+@app.route("/adminADD/<username>/<password>/<email>", methods=["POST"])
+def adminADD(username=None, password=None, email=None):
+    if is_admin(session["username"]) is "False":
+        return 401
+    if username is None or password is None or email is None:
+        return 400
+    newUser(username, password, email)
+    return "Success"
+
+@app.route("/adminREMOVE/<username>", methods=["POST"])
+def adminREMOVE(username=None):
+    if is_admin(session["username"]) is "False":
+        return 401
+    if username is None:
+        return 400
+    removeUser(getID(username))
+    return "Success"
+
+@app.route("/dump_database", methods=["GET"])
+def dumpDB():
+    if is_admin(session["username"]) is "False":
+        return 405
+    users = dump()
+    retval = {}
+    for x in users:
+        retval[str(x.username)] = x.email
+    return jsonify(retval)
 
 @app.route("/email_address/<username>", methods=["GET"])
 def showEmaild(username=None):
@@ -333,7 +365,6 @@ def initdb():
     create_request(test10.username, test12.username)
     create_request(test11.username, test12.username)
     create_request(Owner.username, test12.username)
-
     addToGroup(2, test10.id)
     
     
