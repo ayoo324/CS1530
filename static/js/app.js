@@ -1,10 +1,10 @@
-var timeout = 750;
+var timeout = 1000;
 var lastTimeStamp = 0;
 
 var moddingGroup = false;
 
 //Functions for XMLHttpRequest
-function makeReq(method, target, retCode, action, data) {
+function makeReq(method, target, retCode, action, data, overload) {
     var httpRequest = new XMLHttpRequest();
 
     if (!httpRequest) {
@@ -12,7 +12,7 @@ function makeReq(method, target, retCode, action, data) {
         return false;
     }
 
-    httpRequest.onreadystatechange = makeHandler(httpRequest, retCode, action);
+    httpRequest.onreadystatechange = makeHandler(httpRequest, retCode, action, overload);
     httpRequest.open(method, target);
 
     if (data) {
@@ -23,11 +23,14 @@ function makeReq(method, target, retCode, action, data) {
         httpRequest.send();
     }
 }
-function makeHandler(httpRequest, retCode, action) {
+function makeHandler(httpRequest, retCode, action, overload) {
     function handler() {
         if (httpRequest.readyState === XMLHttpRequest.DONE) {
             if (httpRequest.status === retCode && action != null) {
-                action(httpRequest.responseText);
+                if(overload)
+                    action(httpRequest.responseText, overload);
+                else
+                    action(httpRequest.responseText);
             }
             if (httpRequest.status !== retCode){
                 alert("There was a problem");
@@ -81,7 +84,7 @@ function chatScreen(id){
         //display contact info
         makeReq("GET", "/picture/group/" + currGroup, 200, display_pictures);
         //display messages
-        makeReq("GET", "/group/" + currGroup, 200, display_chat);
+        makeReq("GET", "/group/" + currGroup, 200, display_chat, null, currGroup);
         //message bar
         var newElement = document.createElement("messagebar");
         newElement.classList.add("textBarWrapper");
@@ -609,17 +612,20 @@ function setGroup(id){
         profileScreen('lastColumn');
     }
 }
-function display_chat(responseText){
+function display_chat(responseText, sentGroup){
     var response = JSON.parse(responseText);
+    if(currGroup != sentGroup)
+        return false;
     if(currScreen == 0){
         if(Array.isArray(response)){
             username = document.URL.split('/').pop();
-            console.log(username);
+            //console.log(username);
             if(response[0][2] == lastTimeStamp && currGroup == prevGroup){
                 return 0;
             }
             prevGroup = currGroup;
             var chatElement = document.getElementById("chatElement");
+            removeAll(chatElement.id);
             var node = document.createElement("emptyNode");
             chatElement.innerHTML = "";
             chatElement.appendChild(node);
@@ -685,7 +691,7 @@ function sendMessage(){
 }
 function poller(){
     if(currScreen == 0){
-        makeReq("GET", "/group/" + currGroup, 200, display_chat);
+        makeReq("GET", "/group/" + currGroup, 200, display_chat, null, currGroup);
         setTimeout(poller, timeout);
     }
 }
