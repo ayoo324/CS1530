@@ -308,6 +308,20 @@ def removeFriend(username=None):
     if user:
         return remove_friend(username, request.get_data(True, True, False))
     return "-2"
+
+@app.route("/change_db/<db>", methods = ["POST"])
+def changeDB(db=None):
+    if db is None:
+        return "False"
+    if is_admin(session["username"]) is "False":
+        return "False"
+    else:
+        if os.path.isfile(db):
+            app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(app.root_path, db)
+            return "Success"
+        else:
+            return "False"
+
 #----------CMDS
 @app.cli.command("initdb")
 def initdb():
@@ -327,6 +341,13 @@ def initdb():
     test10 = newUser("test10", "pass", "boberwerchen0201@gmail.com")
     test11 = newUser("test11", "pass", "btren0201@gmail.com")
     test12 = newUser("test12", "pass", "boytryen0201@gmail.com")
+    newUser("test13", "pass", "cryen0201@gmail.com")
+    newUser("test14", "pass", "bovyen0201@gmail.com")
+    newUser("test15", "pass", "bzben0201@gmail.com")
+    newUser("test16", "pass", "ztryen0201@gmail.com")
+    newUser("test17", "pass", "bwn0201@gmail.com")
+    newUser("test18", "pass", "bok0201@gmail.com")
+    newUser("test19", "pass", "bou201@gmail.com")
    #Generate test contact list
     addFriend(getID("test1"), getID("test2"))
     addFriend(test1.id, test2.id)

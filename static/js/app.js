@@ -320,6 +320,10 @@ function remove_user(){
     console.log(username);
     makeReq("POST", "/adminREMOVE/" + username, 200, printOutResponse);
 }
+function change_db(){
+    database = document.getElementById("changeDatabase").value;
+    makeReq("POST", "/change_db/" + database, 200, printOutResponse);
+}
 function dumpDB(){
     makeReq("GET", "/dump_database", 200, printOutResponse);
 }
@@ -431,9 +435,20 @@ function display_admin(responseText){
     dumpDatabase.innerHTML = "<center><button onclick=\"dumpDB()\">Dump database</button></center>";
     dump.classList.add("column30");
     dump.appendChild(dumpDatabase);
+    var dbField = document.createElement("textarea");
+    dbField.placeholder = "Database...";
+    dbField.setAttribute("type", "text");
+    dbField.name = "changeDB";
+    dbField.id = "changeDatabase";
+    dbField.classList.add("textBar");
+    dump.appendChild(dbField);
+    var chDB = document.createElement("button");
+    chDB.innerHTML = "<button onclick=\"change_db()\">Switch db</button><br>";
+    dump.appendChild(chDB);
     functions.appendChild(dump);
     admin.appendChild(functions);
 }
+
 function contacts(id){
     ContactList = document.getElementById(id);
     //console.log(ContactList.ClassList);
